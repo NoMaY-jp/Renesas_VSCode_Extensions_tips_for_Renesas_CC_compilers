@@ -1,0 +1,23 @@
+FIXME: Prepare testall.bat or testall.cmake or something like it.
+
+FIXME: Lack of test patterns for target_library_generate_options():
+(1) more than two executable targets.
+(2) BEFORE
+(3) INTERFACE|PUBLIC|PRIVATE
+(4) item2, item3
+
+FIXME: Lack of test patterns:
+(*) -xcopt= : How to test this option?
+(*) short format option of linker option (linker wrapper script)
+(*) paths including space
+(*) dependency scan
+(*) following variables
+    set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE ...
+    set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     ...
+(*) Linker's additional behavior
+(*) CC-RX Assembler's additional behavior
+(*) CC-RX C++'s test_dep_scan_etc_cpp.{cpp, h}
+(*) CC-RL C++'s test_dep_scan_etc_cpp.{cpp, h}
+(*) `done` or `failed` of compiler ABI info and features check
+
+and more...

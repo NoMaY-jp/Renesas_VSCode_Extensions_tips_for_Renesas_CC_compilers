@@ -1,0 +1,39 @@
+# Ignore build results and unnecessary setting/working files by/for e2 studio
+HardwareDebug/
+cgprojectDatas.datas
+cgproject.cgp
+e2studio_project.prefs
+language.settings.xml
+com.renesas.smc.e2studio.qe.xml
+DebugVirtualConsoleSetting.xml
+PerfAnalysisSettings.xml
+CoverageSetting.xml
+IORegisterSetting.xml
+
+# Ignore build results and unnecessary setting/working files by/for EWB
+Debug/
+*.custom_argvars
+*.dep
+*.ewt
+*.crun
+*.dbgdt
+*.*.cspy.bat
+*.*.cspy.ps1
+*.*.driver.xcl
+*.*.general.xcl
+*.wsdt
+
+# Ignore build results and unnecessary setting/working files by/for CS+
+DefaultBuild/
+*.*.mtud
+*.mtls
+
+# Ignore build results and unnecessary setting/working files by/for VSCode
+build/
+.cache/
+
+# Ignore PDF documents of Renesas API
+r01an*.pdf
+
+# Ignore unnecessary automatic generated file by Windows
+Thumbs.db

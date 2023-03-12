@@ -1,0 +1,9 @@
+;int sample_asm(int a, int b) {return a + b;}
+
+		.glb	_sample_asm
+		.SECTION	P,CODE
+_sample_asm:
+		.STACK	_sample_asm=4
+		ADD R2, R1
+		RTS
+		.END

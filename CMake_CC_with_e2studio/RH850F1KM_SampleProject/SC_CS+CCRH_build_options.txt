@@ -1,0 +1,10 @@
+﻿========== ビルド・オプション一覧(2022年1月31日 14:34:04) ==========
+------ ビルド・オプション一覧開始(SC_CS+CCRH, DefaultBuild) ------
+[共通オプションの設定状況]
+iodefine.h : C:\Renesas\CS+\CC\Utilities\IOHeaderGenerator\df2iodef.exe -df=C:\Renesas\CS+\CC\Device\RH850\Devicefile\DR7F701645.DVF -o=C:\Renesas\GitHubDesktop\workspaces\work_cmake\TestCMakeCCxx\RH850F1KM_SampleProject\iodefine.h -def=off -f
+sample_src\sc_intprg.c src\smc_gen\general\r_cg_cgc.c src\smc_gen\general\r_cg_cgc_user.c src\smc_gen\general\r_cg_intvector.c src\smc_gen\general\r_cg_main.c src\smc_gen\general\r_cg_systeminit.c src\smc_gen\general\r_smc_interrupt.c src\smc_gen\r_pincfg\Pin.c : C:\Renesas\CS+\CC\CC-RH\V2.04.00\Bin\ccrh.exe sample_src\sc_intprg.c src\smc_gen\general\r_cg_cgc.c src\smc_gen\general\r_cg_cgc_user.c src\smc_gen\general\r_cg_intvector.c src\smc_gen\general\r_cg_main.c src\smc_gen\general\r_cg_systeminit.c src\smc_gen\general\r_smc_interrupt.c src\smc_gen\r_pincfg\Pin.c -Xobj_path=DefaultBuild -Xcpu=g3kh -g -g_line -Isrc\smc_gen\r_pincfg -Isrc\smc_gen\general -I. -Xdbl_size=4 -c -Xmsg_lang=japanese
+sample_src\sc_boot.asm sample_src\sc_cstart.asm : C:\Renesas\CS+\CC\CC-RH\V2.04.00\Bin\ccrh.exe sample_src\sc_boot.asm sample_src\sc_cstart.asm -Xobj_path=DefaultBuild -Xcpu=g3kh -g -c -Xmsg_lang=japanese
+DefaultBuild\SC_CS+CCRH.abs DefaultBuild\SC_CS+CCRH.mot : C:\Renesas\CS+\CC\CC-RH\V2.04.00\Bin\rlink.exe -subcommand=DefaultBuild\SC_CS+CCRH.clnk
+------ ビルド・オプション一覧終了(エラー:0個, 警告:0個)(SC_CS+CCRH, DefaultBuild) ------
+========== 終了しました(成功:1プロジェクト, 失敗:0プロジェクト)(2022年1月31日 14:34:05) ==========
+

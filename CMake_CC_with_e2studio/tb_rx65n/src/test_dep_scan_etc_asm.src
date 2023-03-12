@@ -1,0 +1,14 @@
+; Include file to test dependency scan for "Unix Makefiles" and "Ninja".
+.include test_dep_scan_etc_asm.inc
+
+; Check definition via command line option
+.if TB_RX65N != 1
+.assert "#error !defined(TB_RX65N) || (TB_RX65N != 1)"
+.assert ; Force an assemble error.
+.endif
+.if DEF_WITHOUT_VAL != 1
+.assert "#error !defined(DEF_WITHOUT_VAL) || (DEF_WITHOUT_VAL != 1)"
+.assert ; Force an assemble error.
+.endif
+
+.END

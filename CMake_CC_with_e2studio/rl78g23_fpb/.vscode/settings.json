@@ -1,0 +1,11 @@
+{
+    "C_Cpp.updateChannel": "Insiders",
+    "workbench.iconTheme": "vs-minimal",
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "${workspaceFolder}/cross.cmake",
+        "CMAKE_TOOLS_FOLDER": "${command:renesas.utilities.folder}/tools"
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.configureOnOpen": true,
+    "C_Cpp.intelliSenseEngineFallback": "Enabled"
+}
