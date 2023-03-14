@@ -101,7 +101,7 @@ rem Ninja
 echo\
 echo\
 mkdir %TESTROOT%\%1\build
-set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja -DDEBUG_RSP_FILE:BOOL=FALSE -D_RENESAS_NIGHTLY_TEST_MSG=2
+set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja
 echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
@@ -134,7 +134,7 @@ if not exist "%TESTROOT%\%1\build\%1.%4" (
     goto :fail
 )
 if not "%~5" == "p,s" goto Ninja_skip_p_s
-    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=1 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja -DDEBUG_RSP_FILE:BOOL=FALSE -D_RENESAS_NIGHTLY_TEST_MSG=2
+    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=1 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja
     echo %CMDLINE%
     %CMDLINE%
     set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --target all --
@@ -154,7 +154,7 @@ if not "%~5" == "p,s" goto Ninja_skip_p_s
         goto :fail
     )
 
-    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=2 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja -DDEBUG_RSP_FILE:BOOL=FALSE -D_RENESAS_NIGHTLY_TEST_MSG=2
+    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=2 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja
     echo %CMDLINE%
     %CMDLINE%
     set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --target all --
@@ -188,7 +188,7 @@ rem Unix Makefile
 echo\
 echo\
 mkdir %TESTROOT%\%1\build
-set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles" -DDEBUG_RSP_FILE:BOOL=FALSE -D_RENESAS_NIGHTLY_TEST_MSG=2
+set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles"
 echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
@@ -221,7 +221,7 @@ if not exist "%TESTROOT%\%1\build\%1.%4" (
     goto :fail
 )
 if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
-    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=1 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles" -DDEBUG_RSP_FILE:BOOL=FALSE -D_RENESAS_NIGHTLY_TEST_MSG=2
+    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=1 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles"
     echo %CMDLINE%
     %CMDLINE%
     set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --target all --
@@ -241,7 +241,7 @@ if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
         goto :fail
     )
 
-    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=2 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles" -DDEBUG_RSP_FILE:BOOL=FALSE -D_RENESAS_NIGHTLY_TEST_MSG=2
+    set CMDLINE="%CMAKE%" --no-warn-unused-cli -DEXAMPLE_ALT_OUTPUT_TYPE=2 -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles"
     echo %CMDLINE%
     %CMDLINE%
     set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --target all --
