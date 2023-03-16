@@ -5,11 +5,27 @@ TODO:
 * Reconsider the process for checking CC-RX's Compiler's C++ features (there are no C++ standards)
 * In case of using Ninja in DOS prompt, setting `chcp 65001` is necessary to display Japanese characters correctly.
 * Is it better to add `-goptimize` to all build configurations(DEBUG, MINSIZEREL, RELEASE, RELWITHDEBINFO)?
+* Reconsider _RENESAS_NIGHTLY_TEST_MSG about name and purpos. 
 * CC-RX's Assembler's listfile extension handling like CC-{RL, RH}'s Assembler
 * CC-RL's SMS Assembler
 * CC-RL's -Olite option
 * CC-RL's C++14 feature
 * udcollector
+
+* Check timeout and display an error message
+RENESAS-FindBinUtils.cmake
+      execute_process(
+        COMMAND "${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER}"
+        -V
+        OUTPUT_VARIABLE output ERROR_VARIABLE output
+        RESULT_VARIABLE result
+        TIMEOUT 30
+      )
+
+* If XConverter is used, show a message at configure time, for example, after displaying assember identification message.
+* ex)
+* XConverter is not found. Generate .abs file for debugging with CS+.
+* XConverter is found. Generate .x file for debugging with e2 studio.    (File extension might be different depending on user setting.)
 
 * Does Ninja's `multi-config` need additional care?
 * What is CMake's `preset`?

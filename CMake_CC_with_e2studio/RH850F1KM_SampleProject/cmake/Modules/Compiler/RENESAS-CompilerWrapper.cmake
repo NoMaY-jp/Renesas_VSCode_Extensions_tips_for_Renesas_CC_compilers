@@ -53,15 +53,15 @@ endforeach()
 # In some cases, there are no target option during CMake's compiler check process.
 if(NOT target_opt)
   if(arc STREQUAL RX)
-    set(try_compile_compiler_target_arg -cpu=rx600)
+    set(try_compile_compiler_target_arg -isa=rxv1)
     set(try_compile_compile_source_lang -lang=cpp)
   elseif(arc STREQUAL RL78)
     set(try_compile_compiler_target_arg -cpu=S2)
     set(try_compile_compile_source_lang -lang=cpp)
-    #set(try_compile_compiler_msg_lang -msg_lang=english) # For debugging.
+    set(try_compile_compiler_msg_lang -msg_lang=english) # Japanese characters cannot be displayed correctly in the process.
   elseif(arc STREQUAL RH850)
-    #set(try_compile_compiler_target_arg -Xcpu=g3m) # Not necessary.
-    #set(try_compile_compiler_msg_lang -Xmsg_lang=english) # For debugging.
+    set(try_compile_compiler_target_arg -Xcommon=rh850) # CC-RX V1.00 and V1.01 need this option.
+    set(try_compile_compiler_msg_lang -Xmsg_lang=english) # Japanese characters cannot be displayed correctly in the process.
   endif()
   if(src_name MATCHES "CMakeScratch(/|\\\\)[^/\\\\]+(/|\\\\)test(C|CXX)Compiler\\.(c|cxx|cpp)$")
     list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})

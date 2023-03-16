@@ -1,4 +1,6 @@
-FIXME: Prepare testall.bat or testall.cmake or something like it.
+FIXME: Convert test batch files to CMake script files.
+
+FIXME: Reconsider _RENESAS_NIGHTLY_TEST_MSG about name and purpos. 
 
 FIXME: Lack of test patterns for target_library_generate_options():
 (1) more than two executable targets.
@@ -19,5 +21,6 @@ FIXME: Lack of test patterns:
 (*) CC-RX C++'s test_dep_scan_etc_cpp.{cpp, h}
 (*) CC-RL C++'s test_dep_scan_etc_cpp.{cpp, h}
 (*) `done` or `failed` of compiler ABI info and features check
+(*) generation check of .x file
 
 and more...

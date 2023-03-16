@@ -106,7 +106,8 @@ if(NOT CMAKE_C_COMPILER_VERSION)
 endif()
 
 if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
-  if(CMAKE_C_COMPILER_VERSION VERSION_LESS 2.0)
+  if(CMAKE_C_COMPILER_VERSION VERSION_LESS 2.3)
+    # CC-RX V2.02 or older does not support -MM and -MT which are necessary to generate GCC like dependency files.
     message(FATAL_ERROR "Renesas RX Family Compiler version ${CMAKE_CXX_COMPILER_VERSION} is not supported by CMake.")
   endif()
 endif()
