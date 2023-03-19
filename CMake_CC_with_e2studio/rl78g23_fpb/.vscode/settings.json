@@ -7,5 +7,5 @@
     },
     "cmake.sourceDirectory": "${workspaceFolder}",
     "cmake.configureOnOpen": true,
-    "C_Cpp.intelliSenseEngineFallback": "Enabled"
+    "C_Cpp.intelliSenseEngineFallback": "disabled"
 }

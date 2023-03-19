@@ -1,0 +1,32 @@
+# https://clangd.llvm.org/config
+
+# As of tody, this file is tentative.
+CompileFlags:
+  Remove:
+    - -^-
+    - -Xcpu=*
+    - -O*
+    - -g*
+    - -Xcharacter_set=*
+    - -Xpass_source
+    - -Xcref=*
+    - -nologo
+  Add:
+    - -U__llvm__
+    - -D_CLANGD=1
+    - -D__INTELLISENSE__=1
+    - --include=../.vscode/c_cpp_intellisense_helper.h
+Diagnostics:
+  Suppress:
+    - drv_unknown_argument
+    - builtin_redeclare
+    - redefinition_different_typedef
+    - -Wignored-pragmas # for invalid pragma
+    - -Winvalid-token-paste # for invalid pragma
+    - -Wmain-return-type # for void main(void or arguments)
+
+# Cannot suppress driver diagnostics #1142
+# https://github.com/clangd/clangd/issues/1142
+
+# Clang command line argument reference
+# https://clang.llvm.org/docs/ClangCommandLineReference.html

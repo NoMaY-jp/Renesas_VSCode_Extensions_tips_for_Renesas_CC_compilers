@@ -31,6 +31,8 @@ add_executable(${PROJECT_NAME}
 
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.asm
+
+    ${GSG_BASE_DIR}/src/language_extensions.c
 )
 
 target_include_directories(${PROJECT_NAME}
