@@ -1,7 +1,7 @@
 #ifndef C_CPP_INTELLISENSE_HELPER_H
 #define C_CPP_INTELLISENSE_HELPER_H
 
-#ifdef __INTELLISENSE__
+#if defined(__INTELLISENSE__) || defined(_CLANGD)
 #define __CDT_PARSER__ /* This might be a bad practice... */
 
 /*
@@ -18,18 +18,16 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 #define __v850e3v5__ 1
 
 /*
-4.2.6.13 Half-precision floating-point type [Professional Edition only] [V1.05.00 or later]
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRH.chm/Output/ccrh04c0206y1300.html#29532
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRH.chm/Output/ccrh04c0206y1300.html#29532
-*/
-//#define __fp16 float /* Clang supports this. MSVC doesn't support this. */
- 
-/*
-4.2.4 #pragma directive
+4.2.5 #pragma directive
 http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRH.chm/Output/ccrh04c0205y.html
 http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRH.chm/Output/ccrh04c0205y.html
 */
-//#pragma diag_suppress 661 /* This is the case for MSVC IntelliSence */
+#if defined(__INTELLISENSE__)
+#pragma diag_suppress 661
+#endif
+#if defined(_CLANGD)
+#pragma clang diagnostic ignored "-Wignored-pragmas"
+#endif
 
 /*
 4.2.6.7 Intrinsic functions
@@ -38,6 +36,23 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 */
 #include <builtin.h>
 
-#endif /* __INTELLISENSE__ */
+/*
+4.2.6.13 Half-precision floating-point type [Professional Edition only] [V1.05.00 or later]
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRH.chm/Output/ccrh04c0206y1300.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRH.chm/Output/ccrh04c0206y1300.html
+*/
+#if defined(__INTELLISENSE__)
+#define __fp16 float /* Clang supports __fp16. MSVC doesn't support __fp16. */
+#endif
+
+/*
+For other differnce between CC-RH and MSVC/Clang
+*/
+#if defined(__INTELLISENSE__)
+#endif
+#if defined(_CLANGD)
+#endif
+
+#endif /* defined(__INTELLISENSE__) || defined(_CLANGD) */
 
 #endif /* C_CPP_INTELLISENSE_HELPER_H */

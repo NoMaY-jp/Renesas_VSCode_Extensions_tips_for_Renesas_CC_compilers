@@ -2,33 +2,60 @@
 
 # As of tody, this file is tentative.
 CompileFlags:
-  Remove:
-    - -^-
-    - -cpu=*
-    - -isa=*
-    - -optimize=*
-    - -size
-    - -speed
-    - -g*
-    - -nomessage=*
-    - -type_size_access_to_volatile
-    - -nologo*
   Add:
+    - -std=c99 # This causes `Invalid argument '-std=c99' not allowed with 'C++'` for C++ source files.
     - -U__llvm__
     - -D_CLANGD=1
-    - -D__INTELLISENSE__=1
     - --include=../.vscode/c_cpp_intellisense_helper.h
+    - -m32
+  Remove:
+    - -^-
+    - -a*
+    - -b*
+    - -c*
+    - -d*
+    - -e*
+    - -f*
+    - -g*
+    - -h*
+    # - -i* # -isystem=XXX is used.
+    - -insert_nop_with_label
+    - -ignore_files_misra
+    - -include=*
+    - -isa=*
+    - -inline*
+    - -instalign*
+    - -int_to_short
+    - -ip_optimize
+    - -j*
+    - -k*
+    - -l*
+    - -m*
+    - -n*
+    - -o*
+    - -p*
+    - -q*
+    - -r*
+    - -s*
+    - -t*
+    - -u*
+    - -v*
+    - -w*
+    - -x*
+    - -y*
+    - -z*
 Diagnostics:
   Suppress:
     - drv_unknown_argument
-    - builtin_redeclare
-    - redefinition_different_typedef
-    - -Wignored-pragmas # for invalid pragma
-    - -Winvalid-token-paste # for invalid pragma
-    - -Wmain-return-type # for void main(void or arguments)
+    - builtin_redeclare # __built_in_va_start
+    - main_returns_nonint # main # When -std=XXX is specified.
+    - -Wmain-return-type # main # When -std=XXX isn't specified.
 
 # Cannot suppress driver diagnostics #1142
 # https://github.com/clangd/clangd/issues/1142
 
 # Clang command line argument reference
 # https://clang.llvm.org/docs/ClangCommandLineReference.html
+
+# Clang Compiler User's Manual
+# https://clang.llvm.org/docs/UsersManual.html

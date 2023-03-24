@@ -1,7 +1,7 @@
 #ifndef C_CPP_INTELLISENSE_HELPER_H
 #define C_CPP_INTELLISENSE_HELPER_H
 
-#ifdef __INTELLISENSE__
+#if defined(__INTELLISENSE__) || defined(_CLANGD)
 #define __CDT_PARSER__ /* This might be a bad practice... */
 
 #if !defined( __GNUC__) && !defined( __llvm__ )
@@ -12,8 +12,8 @@ Tips to make IntelliSense work with code written for Renesas CC-RL compiler
 
 /*
 4.2.2 Macro
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0202y.html
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0202y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0202y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0202y.html
 */
 #define __CCRL__ 1
 #define __RL78__ 1
@@ -23,8 +23,8 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.06.00
 
 /*
 4.2.1 Reserved words
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0201y.html
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0201y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0201y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0201y.html
 */
 #define __saddr
 #define __callt
@@ -35,17 +35,30 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.06.00
  
 /*
 4.2.4 #pragma directive
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0204y.html
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0204y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0204y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0204y.html
 */
+#if defined(__INTELLISENSE__)
 #pragma diag_suppress 661
+#endif
+#if defined(_CLANGD)
+#pragma clang diagnostic ignored "-Wignored-pragmas"
+#endif
 
 /*
 4.2.7 Intrinsic functions
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0207y.html
-http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.06.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0207y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0207y.html
+http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0207y.html
 */
-#include "builtin.h"
+#include <builtin.h>
+
+/*
+For other differnce between CC-RL and MSVC/Clang
+*/
+#if defined(__INTELLISENSE__)
+#endif
+#if defined(_CLANGD)
+#endif
 
 #else /* !defined( __GNUC__) && !defined( __llvm__ ) */
 
@@ -117,6 +130,6 @@ signed long __macsi(signed int x, signed int y, signed long z);
 
 #endif /* !defined( __GNUC__) && !defined( __llvm__ ) */
 
-#endif /* __INTELLISENSE__ */
+#endif /* defined(__INTELLISENSE__) || defined(_CLANGD) */
 
 #endif /* C_CPP_INTELLISENSE_HELPER_H */
