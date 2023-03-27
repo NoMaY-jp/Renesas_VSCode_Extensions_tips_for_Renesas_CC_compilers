@@ -7,7 +7,9 @@ set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RX/V3.05.00/bin) # Quote the path with "
 set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_733684649/Utilities/ccrx) # Quote the path with "..." if it includes space.  # For e2 studio.
 
 set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrx.exe)
-set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In case of CS+, define the tool as "" or exclude the tool from `Path`.
+set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
+
+set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
 
 ############################
 macro(SET_DIRECTORY_OPTIONS)
@@ -34,7 +36,7 @@ $<$<COMPILE_LANGUAGE:ASM>:-listfile=.>
 add_library_generate_options(
 -head=runtime,ctype,stdarg,stdio,stdlib,string
 )
-# Unfortunately, in case of Ninja, there are several minutes without any messages during execution
+# Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 
 add_link_options(
@@ -153,6 +155,16 @@ endmacro()
 
 # Assembler's `-define=` can accept a symbol without a value. In the case, the symbol is
 # regarded as being specified with 1. (i.e `-define=<symbol>=1`)
+
+# Clang-like -I, -D and @ options can be used.
+# Especially when LLVM clangd language server and Microsoft VSCode are used together with CMake,
+# using above options is recommended instead of CC-RX's -include=, -define= and -subcommand= options
+# if there are some reasons to use CC-RX's these options in the CMakeLists.txt and/or toolchain file.
+
+# When the language standard such as C90 or C99 is specified by CMake's language standard variables
+# and/or commands, the following definitions may be passed to not only LLVM clangd language server
+# but also CC-RX by `-D` option as follows.
+# -DINTELISENSE_HELPER_C_STANDARD=<value>
 
 #---------------------------------------------------------------------
 # Note: DebugComp, Internal and Utilities folder location of e2 studio

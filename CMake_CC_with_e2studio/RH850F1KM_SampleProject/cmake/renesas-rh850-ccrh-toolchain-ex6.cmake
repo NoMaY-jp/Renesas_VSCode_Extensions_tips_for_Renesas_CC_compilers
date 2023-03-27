@@ -7,7 +7,9 @@ set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RH/V2.05.00/bin) # Quote the path with "
 set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64_v202301/eclipse/plugins/com.renesas.ide.supportfiles.rh850.ccrh.build.win32.x86_64_1.0.0.v20220616-0824/ccrh) # Quote the path with "..." if it includes space.  # For e2 studio.
 
 set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrh.exe)
-set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In case of CS+, define the tool as "" or exclude the tool from `Path`.
+set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
+
+set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
 
 #########################
 macro(SET_TARGET_OPTIONS)
@@ -98,10 +100,16 @@ endmacro()
 #----------------------------------------------------
 
 # The following usage is deprecated because CMake 3.26.0-rc2 no longer causes any problem.
-## In case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
+## In the case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
 ## with single quotation character as follow:
 ## '-S'
 ## '-P'
+
+# When the language standard such as C90 or C99 is specified by CMake's language standard variables
+# and/or commands, the following definitions may be passed to not only LLVM clangd language server
+# but also CC-RH by `-D` option as follows.
+# -DINTELISENSE_HELPER_C_STANDARD=<value>
+# -DINTELISENSE_HELPER_C_EXTENSIONS=<value>
 
 #---------------------------------------------------------------------
 # Note: DebugComp, Internal and Utilities folder location of e2 studio

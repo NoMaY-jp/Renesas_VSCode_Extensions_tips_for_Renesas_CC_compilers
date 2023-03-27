@@ -219,7 +219,7 @@ macro(__compiler_renesas lang)
   # To reduce `cases which have to be considered`, the following variables are set.
   # Perhaps there are little impact about a total build time. However, other than Ninja,
   # it is also possible that you can define your own setting in the toolchain file.
-  # In case of Ninja, states of the setting variable are defined/not defined, i.e. 
+  # In the case of Ninja, states of the setting variable are defined/not defined, i.e. 
   # none of any pair of ON/OFF, TRUE/FALSE, 1/0, therefore always reponse file is used.
   # TODO: The following variables might be prepared for debugging, so that they should not be used?
   if(CMAKE_GENERATOR MATCHES "^Ninja")
@@ -247,19 +247,11 @@ macro(__compiler_renesas lang)
   find_file(_RENESAS_LINKER_WRAPPER     Compiler/RENESAS-LinkerWrapper.cmake       PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
   find_file(_RENESAS_LIBGEN_WRAPPER     Compiler/RENESAS-LibGeneratorWrapper.cmake PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
   find_file(_RENESAS_XCONVERTER_WRAPPER Compiler/RENESAS-XConverterWrapper.cmake   PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-  if(CMAKE_GENERATOR MATCHES "^Ninja" AND CMAKE_NINJA_FORCE_RESPONSE_FILE EQUAL ON)
-    set(_RENESAS_COMPILER_WRAPPER   "<CMAKE_COMMAND> -P \"${_RENESAS_COMPILER_WRAPPER}\" ")
-    set(_RENESAS_ASSEMBLER_WRAPPER  "<CMAKE_COMMAND> -P \"${_RENESAS_ASSEMBLER_WRAPPER}\" ")
-    set(_RENESAS_LINKER_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LINKER_WRAPPER}\" ")
-    set(_RENESAS_LIBGEN_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LIBGEN_WRAPPER}\" ")
-    set(_RENESAS_XCONVERTER_WRAPPER "<CMAKE_COMMAND> -P \"${_RENESAS_XCONVERTER_WRAPPER}\" ")
-  else()
-    set(_RENESAS_COMPILER_WRAPPER   "CMD /C <CMAKE_COMMAND> -P \"${_RENESAS_COMPILER_WRAPPER}\" ")
-    set(_RENESAS_ASSEMBLER_WRAPPER  "CMD /C <CMAKE_COMMAND> -P \"${_RENESAS_ASSEMBLER_WRAPPER}\" ")
-    set(_RENESAS_LINKER_WRAPPER     "CMD /C <CMAKE_COMMAND> -P \"${_RENESAS_LINKER_WRAPPER}\" ")
-    set(_RENESAS_LIBGEN_WRAPPER     "CMD /C <CMAKE_COMMAND> -P \"${_RENESAS_LIBGEN_WRAPPER}\" ")
-    set(_RENESAS_XCONVERTER_WRAPPER "CMD /C <CMAKE_COMMAND> -P \"${_RENESAS_XCONVERTER_WRAPPER}\" ")
-  endif()
+  set(_RENESAS_COMPILER_WRAPPER   "<CMAKE_COMMAND> -P \"${_RENESAS_COMPILER_WRAPPER}\" ")
+  set(_RENESAS_ASSEMBLER_WRAPPER  "<CMAKE_COMMAND> -P \"${_RENESAS_ASSEMBLER_WRAPPER}\" ")
+  set(_RENESAS_LINKER_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LINKER_WRAPPER}\" ")
+  set(_RENESAS_LIBGEN_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LIBGEN_WRAPPER}\" ")
+  set(_RENESAS_XCONVERTER_WRAPPER "<CMAKE_COMMAND> -P \"${_RENESAS_XCONVERTER_WRAPPER}\" ")
   get_filename_component(_RENESAS_${lang}_COMPILER_PATH ${CMAKE_${lang}_COMPILER}/../.. ABSOLUTE)
   if(CMAKE_RENESAS_XCONVERTER)
     get_filename_component(_RENESAS_E2STUDIO_SUPPORT_AREA ${CMAKE_RENESAS_XCONVERTER}/../../.. ABSOLUTE)
@@ -269,23 +261,26 @@ macro(__compiler_renesas lang)
   else()
     set(_RENESAS_E2STUDIO_SUPPORT_AREA -)
   endif()
-  # FIXME: This is a workaround for only Windows environment regarding the clangd language server's following issue.
-  # Note: When clangd finds `--` in options, somehow it ignores all options though it is `-I` or `-D`.
-  string(APPEND _RENESAS_COMPILER_WRAPPER   "-^- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
-  string(APPEND _RENESAS_ASSEMBLER_WRAPPER  "-^- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
-  string(APPEND _RENESAS_LINKER_WRAPPER     "-^- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
-  string(APPEND _RENESAS_LIBGEN_WRAPPER     "-^- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
-  string(APPEND _RENESAS_XCONVERTER_WRAPPER "-^- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
+  # When clangd finds `--` in options, it ignores all options after `--' because it is widely used behavior in Linux world.
+  # https://discourse.llvm.org/t/clangd-cant-parse-source-correctly-when-just-option-is-included-in-command-field-of-compile-commands-json/69427/3
+  # Unfortunately, all options including `-I` or `-D` or `@`, etc are after `--` and therefore also these options are ignored.
+  # The following `-z --` is a workaround to prevent clangd from doing such behavior because clangd recognaize it as not `--' but `-z --`.
+  # Fortunately, as of today, CMake ignores unrecognized option such as `-z`.
+  string(APPEND _RENESAS_COMPILER_WRAPPER   "-z -- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
+  string(APPEND _RENESAS_ASSEMBLER_WRAPPER  "-z -- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
+  string(APPEND _RENESAS_LINKER_WRAPPER     "-- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
+  string(APPEND _RENESAS_LIBGEN_WRAPPER     "-- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
+  string(APPEND _RENESAS_XCONVERTER_WRAPPER "-- ${_RENESAS_NIGHTLY_TEST_MSG} \"${CMAKE_GENERATOR}\" ${_RENESAS_E2STUDIO_SUPPORT_AREA} ")
 
   set(CMAKE_${lang}_OUTPUT_EXTENSION ".obj")
 
   if(${lang} STREQUAL "C" OR ${lang} STREQUAL "CXX")
 
     # Note: <FLAGS> includes CMAKE_${lang}_FLAGS, CMAKE_${lang}_FLAGS_<config> and `language standard flags`.
-    # Note: When clangd is used along with CMake, be aware that it recognizes `-I` and `-D` but neither `-include=` nor `-define=`.
-    # Note: When clangd is used along with CMake, be aware that it recognizes `@` but not `-subcommand=`.
-    # Note: When clangd is used along with CMake, it is useful to tell clangd about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
-    #       But `-isystem` is not a native flag but a flag for wrapper script. (The flag is removed in the script.)
+    # When clangd is used along with CMake, be aware that it recognizes `-I` and `-D` but neither `-include=` nor `-define=`.
+    # When clangd is used along with CMake, be aware that it recognizes `@` but not `-subcommand=`.
+    # When clangd is used along with CMake, it is useful to tell clangd about `-std=` and `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
+    # But `-std=` and `-isystem` are not native flags but flags for wrapper script. (These flags are removed in the script.)
     if(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-isa=") # Not supported (at least as of today).
       set(CMAKE_INCLUDE_FLAG_${lang} "-I") # `-I` is not a native flag but a flag for wrapper script. (The flag is converted to `include=` in the script.)
@@ -293,9 +288,20 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_RESPONSE_FILE_FLAG "@") # `@` is not a native flag but a flag for wrapper script.
       set(CMAKE_DEPFILE_FLAGS_${lang} "-MM -MT=<OBJECT> -MF=<DEP_FILE>") # `-MF=` is not a native flag but a flag for wrapper script.
       string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
-      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -output=obj=<OBJECT> -nologo <DEFINES> <INCLUDES> <FLAGS> -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
+      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -output=obj=<OBJECT> -nologo <DEFINES> <INCLUDES> <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -nologo <DEFINES> <INCLUDES> <FLAGS> -output=prep=<PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -nologo <DEFINES> <INCLUDES> <FLAGS> -output=src=<ASSEMBLY_SOURCE>")
+
+      if(${lang} STREQUAL "C")
+        if(CMAKE_C_STANDARD)
+          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
+        else()
+          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD_COMPUTED_DEFAULT} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
+        endif()
+      else()
+        # FIXME: CC-RX does not support any C++ standards.
+        string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c++98 -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
+      endif()
 
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-cpu=") # Not supported (at least as of today).
@@ -304,9 +310,17 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_RESPONSE_FILE_FLAG "@") # `@` is not a native flag but a flag for wrapper script.
       set(CMAKE_DEPFILE_FLAGS_${lang} "-M -MT=<OBJECT> -MF=<DEP_FILE>") # `-MF=` is not a native flag but a flag for wrapper script.
       string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
-      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -c -o <OBJECT> <DEFINES> <INCLUDES> <FLAGS> -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
+      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -c -o <OBJECT> <DEFINES> <INCLUDES> <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -P -o <PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o <ASSEMBLY_SOURCE>")
+
+      if(${lang} STREQUAL "C")
+        if(CMAKE_C_STANDARD)
+          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
+        else()
+          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD_COMPUTED_DEFAULT} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
+        endif()
+      endif()
 
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RH850")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-Xcpu=") # Not supported (at least as of today).
@@ -315,9 +329,17 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_RESPONSE_FILE_FLAG "@") # This is the same as default setting.
       set(CMAKE_DEPFILE_FLAGS_${lang} "-M -MT=<OBJECT> -MF=<DEP_FILE>") # `-MF=` is not a native flag but a flag for wrapper script.
       string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
-      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -o<OBJECT> -c <DEFINES> <INCLUDES> <FLAGS> -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
+      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -o<OBJECT> -c <DEFINES> <INCLUDES> <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -P -o<PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o<ASSEMBLY_SOURCE>")
+
+      if(${lang} STREQUAL "C")
+        if(CMAKE_C_STANDARD)
+          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
+        else()
+          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD_COMPUTED_DEFAULT} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
+        endif()
+      endif()
 
     endif()
 

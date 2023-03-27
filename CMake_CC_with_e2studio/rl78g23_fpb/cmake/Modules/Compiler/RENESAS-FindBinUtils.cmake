@@ -175,7 +175,7 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRENESAS$
 
       # The compiler detection process is skipped but we must know ARCHITECTURE_ID and VERSION correctly.
       # These information can be obtained by using simple -V option for Renesas CC-{RX, RL, RH} compilers.
-      # In case of CC-RX, this option causes an error but fortunately these information can be obtained.
+      # In the case of CC-RX, this option causes an error but fortunately these information can be obtained.
       execute_process(
         COMMAND "${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER}"
         -V

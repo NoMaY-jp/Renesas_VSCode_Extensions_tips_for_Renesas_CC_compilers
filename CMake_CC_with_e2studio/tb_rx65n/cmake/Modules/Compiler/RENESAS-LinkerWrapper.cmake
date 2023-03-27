@@ -159,7 +159,7 @@ if(exe_link_mode)
     else()
       list(PREPEND cmd_args2_list -nologo ${exe_link_abs_name} -form=s)
     endif()
-    # Suppress the following warning messages in case of other than `-form=abs`. Because there
+    # Suppress the following warning messages in the case of other than `-form=abs`. Because there
     # are no way to suppress them by user's toolchain file(s) or user's CMakeLists.txt file(s)
     # in such cases.
     # W0561016:The evaluation version is valid for the remaining NUMBER days
@@ -181,7 +181,7 @@ if(exe_link_mode)
     list(JOIN cmd_args2_list " " cmd_args2_string)
   endif()
 else()
-  # Suppress the following warning messages in case of other than `-form=abs`. Because there
+  # Suppress the following warning messages in the case of other than `-form=abs`. Because there
   # are no way to suppress them by user's toolchain file(s) or user's CMakeLists.txt file(s)
   # in such cases.
   # W0561016:The evaluation version is valid for the remaining NUMBER days
@@ -323,14 +323,14 @@ if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL "") 
   # RAMDATA SECTION:  hhhhhhhh Byte(s)  (d* Bytes(s)) --> Linker: info: RAMDATA SECTION:  hhhhhhhh Byte(s)  (d* Bytes(s))' '
   # ROMDATA SECTION:  hhhhhhhh Byte(s)  (d* Bytes(s)) --> Linker: info: ROMDATA SECTION:  hhhhhhhh Byte(s)  (d* Bytes(s))' '
   # PROGRAM SECTION:  hhhhhhhh Byte(s)  (d* Bytes(s)) --> Linker: info: PROGRAM SECTION:  hhhhhhhh Byte(s)  (d* Bytes(s))' '
-  # The last white space is added for Visual Studio (It is ignored in case of VSCode.)
+  # The last white space is added for Visual Studio (It is ignored in the case of VSCode.)
   string(REGEX REPLACE "(^|\n)(RAMDATA|ROMDATA|PROGRAM)( SECTION:  [^\n]+)" "\\1Linker: info: \\2\\3 " output "${output}")
 
   if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL ""))
     # VSCode's Problem View needs `(num)` before `:`
     string(REGEX REPLACE "(^|\n)Linker: (error|warning|info)([ :][^\n]+)" "\\1Linker(0): \\2\\3" output "${output}")
   else()
-    # Visual Studio's Error List Window does not recognize the following severity in case of C/C++.
+    # Visual Studio's Error List Window does not recognize the following severity in the case of C/C++.
     # info, information, message, suggestion
     string(REGEX REPLACE "(^|\n)Linker: info([ :][^\n]+)" "\\1Linker: warning\\2 (Information)" output "${output}")
   endif()

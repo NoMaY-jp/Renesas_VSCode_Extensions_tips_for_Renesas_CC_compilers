@@ -20,7 +20,9 @@ if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
 elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
   set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrx.exe)
 endif()
-set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In case of CS+, define the tool as "" or exclude the tool from `Path`.
+set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
+
+set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
 
 #########################
 macro(SET_TARGET_OPTIONS)
@@ -34,7 +36,7 @@ set_target_properties(tb_rx65n PROPERTIES SUFFIX ".elf") # TODO: Not only using 
 
 target_compile_options(tb_rx65n PRIVATE
 $<$<COMPILE_LANGUAGE:C,CXX>:-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033>
-$<$<COMPILE_LANGUAGE:CXX>:-lang=ecpp> # -lang=cpp -exception -rtti=on
+$<$<COMPILE_LANGUAGE:CXX>:-lang=ecpp> # -lang=cpp and/or -exception and/or -rtti=on
 $<$<COMPILE_LANGUAGE:ASM>:-isa=rxv2 -goptimize -utf8>
 $<$<COMPILE_LANGUAGE:C,CXX>:-listfile=.>
 $<$<COMPILE_LANGUAGE:ASM>:-listfile=. -define=aaa,bbb=999,ccc,ddd="qqq",eee> # Somehow not `"qqq"` but `qqq` is passed to the assembler.
@@ -65,7 +67,7 @@ target_library_generate_options(tb_rx65n PRIVATE
 target_library_generate_options(tb_rx65n PRIVATE # Dividing the command is intended for test purpos.
 #-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype
 )
-# Unfortunately, in case of Ninja, there are several minutes without any messages during execution
+# Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 
 target_link_options(tb_rx65n PRIVATE
@@ -187,6 +189,16 @@ endmacro()
 
 # Assembler's `-define=` can accept a symbol without a value. In the case, the symbol is
 # regarded as being specified with 1. (i.e `-define=<symbol>=1`)
+
+# Clang-like -I, -D and @ options can be used.
+# Especially when LLVM clangd language server and Microsoft VSCode are used together with CMake,
+# using above options is recommended instead of CC-RX's -include=, -define= and -subcommand= options
+# if there are some reasons to use CC-RX's these options in the CMakeLists.txt and/or toolchain file.
+
+# When the language standard such as C90 or C99 is specified by CMake's language standard variables
+# and/or commands, the following definitions may be passed to not only LLVM clangd language server
+# but also CC-RX by `-D` option as follows.
+# -DINTELISENSE_HELPER_C_STANDARD=<value>
 
 #---------------------------------------------------------------------
 # Note: DebugComp, Internal and Utilities folder location of e2 studio

@@ -1,10 +1,10 @@
-set(msg ${CMAKE_ARGV4})
-set(gen ${CMAKE_ARGV5})
-set(e2studio_support_area ${CMAKE_ARGV6})
-set(arc ${CMAKE_ARGV7})
-set(ver ${CMAKE_ARGV8})
-set(cmd ${CMAKE_ARGV9})
-set(cmd_args_first 10)
+set(msg ${CMAKE_ARGV5})
+set(gen ${CMAKE_ARGV6})
+set(e2studio_support_area ${CMAKE_ARGV7})
+set(arc ${CMAKE_ARGV8})
+set(ver ${CMAKE_ARGV9})
+set(cmd ${CMAKE_ARGV10})
+set(cmd_args_first 11)
 math(EXPR cmd_args_last "${CMAKE_ARGC} - 1")
 # FIXME: Check list operation such as remove/add/replace/find/etc
 foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
@@ -210,7 +210,7 @@ if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL "") 
     string(REGEX REPLACE "(^|\n)<RENESAS-CC>: (error|warning|info)( [^\n]+)" "\\1<RENESAS-CC>(0): \\2\\3" output "${output}")
     string(REPLACE "<RENESAS-CC>" "${src_name}" output "${output}")
   else()
-    # Visual Studio's Error List Window does not recognize the following severity in case of C/C++.
+    # Visual Studio's Error List Window does not recognize the following severity in the case of C/C++.
     # info, information, message, suggestion
     string(REGEX REPLACE "([^\n]+)\\(([0-9]+)\\): info( [^\n]+)" "\\1(\\2): warning\\3 (Information)" output "${output}")
     string(REGEX REPLACE "(^|\n)<RENESAS-CC>: info( [^\n]+)" "\\1<RENESAS-CC>: warning\\2 (Information)" output "${output}")

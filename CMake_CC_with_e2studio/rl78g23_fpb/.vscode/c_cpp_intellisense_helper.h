@@ -7,7 +7,7 @@
 #if !defined( __GNUC__) && !defined( __llvm__ )
 
 /*
-Tips to make IntelliSense work with code written for Renesas CC-RL compiler
+Tips to make IntelliSense or similar feature work with code written for Renesas CC-RL compiler
 */
 
 /*
@@ -20,6 +20,35 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 //#define __RL78_S1__ 1
 //#define __RL78_S2__ 1
 #define __RL78_S3__ 1
+
+#if defined(__STDC_VERSION__) || !defined(__cplusplus)
+  /* Be aware that clangd doesn't define __STDC_VERSION__ when -std=c90 is specified. */
+  #if defined(__STDC_VERSION__)
+    #undef __STDC_VERSION__
+  #endif
+  #if !defined(INTELISENSE_HELPER_C_STANDARD)
+    /* In certain C90 cases, the above macro can't be defined by support module for Renesas CC compilers which works along with CMake. */
+    #if defined(INTELISENSE_HELPER_C_EXTENSIONS) && (INTELISENSE_HELPER_C_EXTENSIONS == 0)
+      #define __STDC_VERSION__ 199409L
+    #endif
+  #elif (INTELISENSE_HELPER_C_STANDARD == 90)
+    /* C90 */
+    #if defined(INTELISENSE_HELPER_C_EXTENSIONS) && (INTELISENSE_HELPER_C_EXTENSIONS == 0)
+      #define __STDC_VERSION__ 199409L
+    #endif
+  #elif (INTELISENSE_HELPER_C_STANDARD == 99)
+    /* C99 */
+    #define __STDC_VERSION__ 199901L
+  #endif
+#endif
+/*
+__STDC_VERSION__
+Decimal constant 199409L (defined when the -lang=c and -strict_std options are specified).Note1
+Decimal constant 199901L (defined when the -lang=c99 option is specified).
+
+Note 1.
+For the processing to be performed when the -strict_std option is specified, see "-strict_std [V1.06 or later] / -ansi [V1.05 or earlier]".
+*/
 
 /*
 4.2.1 Reserved words

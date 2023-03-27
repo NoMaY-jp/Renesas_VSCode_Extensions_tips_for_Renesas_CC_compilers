@@ -1,15 +1,12 @@
 # https://clangd.llvm.org/config
 
-# As of tody, this file is tentative.
 CompileFlags:
   Add:
-    - -std=c99 # This causes `Invalid argument '-std=c99' not allowed with 'C++'` for C++ source files.
     - -U__llvm__
     - -D_CLANGD=1
     - --include=../.vscode/c_cpp_intellisense_helper.h
     - -m32
   Remove:
-    - -^-
     - -a*
     - -b*
     - -c*
@@ -18,15 +15,15 @@ CompileFlags:
     - -f*
     - -g*
     - -h*
-    # - -i* # -isystem=XXX is used.
-    - -insert_nop_with_label
-    - -ignore_files_misra
+    # - -i* # -isystem<directory> is used.
     - -include=*
-    - -isa=*
-    - -inline*
+    - -ignore_files_misra=*
     - -instalign*
-    - -int_to_short
+    - -insert_nop_with_label=*
+    - -inline*
     - -ip_optimize
+    - -isa=*
+    - -int_to_short
     - -j*
     - -k*
     - -l*
@@ -36,7 +33,22 @@ CompileFlags:
     - -p*
     - -q*
     - -r*
-    - -s*
+    # - -s* # -std==<arg> is used.
+    - -section=*
+    - -stuff
+    - -stack_protector*
+    - -show=*
+    - -speed
+    - -size
+    - -scope
+    - -schedule
+    - -smap
+    - -simple_float_conv
+    - -signed_char
+    - -signed_bitfield
+    - -save_acc
+    - -sjis
+    - -subcommand=*
     - -t*
     - -u*
     - -v*
@@ -44,6 +56,9 @@ CompileFlags:
     - -x*
     - -y*
     - -z*
+    - --
+  Compiler:
+    clang
 Diagnostics:
   Suppress:
     - drv_unknown_argument

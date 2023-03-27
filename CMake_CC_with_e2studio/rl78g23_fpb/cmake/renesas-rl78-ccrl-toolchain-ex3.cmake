@@ -9,7 +9,9 @@ set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.re
 set(CMAKE_PROGRAM_PATH ${TOOLCHAIN_PATH} ${EXTERNAL_TOOLCHAIN_PATH})
 
 set(CMAKE_C_COMPILER ccrl -cpu=S3)
-#set(CMAKE_RENESAS_XCONVERTER "") # In case of CS+, define the tool as "" like this or exclude the tool from `Path`.
+#set(CMAKE_RENESAS_XCONVERTER "") # In the case of CS+, define the tool as "" like this or exclude the tool from `Path`.
+
+set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
 
 ############################
 macro(SET_DIRECTORY_OPTIONS)
@@ -83,10 +85,21 @@ endmacro()
 #----------------------------------------------------
 
 # The following usage is deprecated because CMake 3.26.0-rc2 no longer causes any problem.
-## In case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
+## In the case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
 ## with single quotation character as follow:
 ## '-S'
 ## '-P'
+
+# Clang-like @ option can be used.
+# Especially when LLVM clangd language server and Microsoft VSCode are used together with CMake,
+# using above option is recommended instead of CC-RL's -subcommand= options
+# if there are some reasons to use CC-RL's this option in the CMakeLists.txt and/or toolchain file.
+
+# When the language standard such as C90 or C99 is specified by CMake's language standard variables
+# and/or commands, the following definitions may be passed to not only LLVM clangd language server
+# but also CC-RL by `-D` option as follows.
+# -DINTELISENSE_HELPER_C_STANDARD=<value>
+# -DINTELISENSE_HELPER_C_EXTENSIONS=<value>
 
 #---------------------------------------------------------------------
 # Note: DebugComp, Internal and Utilities folder location of e2 studio

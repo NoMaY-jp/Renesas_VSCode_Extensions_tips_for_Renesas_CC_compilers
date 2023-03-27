@@ -3,7 +3,7 @@ TODO:
 * Fix FIXMEs
 * Reconsider the use of `nul` in the code for detecting CC-RX's Assembler
 * Reconsider the process for checking CC-RX's Compiler's C++ features (there are no C++ standards)
-* In case of using Ninja in DOS prompt, setting `chcp 65001` is necessary to display Japanese characters correctly.
+* In the case of using Ninja in DOS prompt, setting `chcp 65001` is necessary to display Japanese characters correctly.
 * Is it better to add `-goptimize` to all build configurations(DEBUG, MINSIZEREL, RELEASE, RELWITHDEBINFO)?
 * Reconsider _RENESAS_NIGHTLY_TEST_MSG about name and purpos. 
 * CC-RX's Assembler's listfile extension handling like CC-{RL, RH}'s Assembler
@@ -30,6 +30,9 @@ RENESAS-FindBinUtils.cmake
 * Does Ninja's `multi-config` need additional care?
 * What is CMake's `preset`?
 * What is `list(APPEND CMAKE_${lang}_COMPILER_PREDEFINES_COMMAND "-Wp,-dM" "-E" "-c" "${CMAKE_ROOT}/Modules/CMakeCXXCompilerABI.cpp")`
+
+* Is there any better way to tell LLVM clangd laguage sever about the language standard of each source file?
+* The current implementation uses CMAKE_C_STANDARD at configuration start and it doesn't depend on each file.
 
 * Refactoring of code
 * Refactoring of regular expression
@@ -86,7 +89,7 @@ Unselected ideas:
 
 Limitations:
 
-* With respect to Libgen, in case of Ninja, there are several minutes without any messages during
+* With respect to Libgen, in the case of Ninja, there are several minutes without any messages during
 execution of library generator actually generating or regenerating libraries.
 
 * With respect to Libgen, error/warning/information message conversion for VSCode's problem window

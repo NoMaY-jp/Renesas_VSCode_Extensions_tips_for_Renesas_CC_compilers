@@ -78,7 +78,8 @@ add_executable(${PROJECT_NAME}
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.src
 
-    ${GSG_BASE_DIR}/src/language_extensions.c
+    ${GSG_BASE_DIR}/src/language_extensions_and_standard.c
+    ${GSG_BASE_DIR}/src/language_standard.cpp # This file is activated in only CXX project.
 )
 
 target_include_directories(${PROJECT_NAME}

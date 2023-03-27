@@ -5,7 +5,7 @@
 #define __CDT_PARSER__ /* This might be a bad practice... */
 
 /*
-Tips to make IntelliSense work with code written for Renesas CC-RH compiler
+Tips to make IntelliSense or similar feature work with code written for Renesas CC-RH compiler
 */
 
 /*
@@ -16,6 +16,28 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 #define __CCRH__ 1
 #define __RH850__ 1
 #define __v850e3v5__ 1
+
+#if defined(__STDC_VERSION__) || !defined(__cplusplus)
+  /* Be aware that clangd doesn't define __STDC_VERSION__ when -std=c90 is specified. */
+  #if defined(__STDC_VERSION__)
+    #undef __STDC_VERSION__
+  #endif
+  #if !defined(INTELISENSE_HELPER_C_STANDARD)
+    /* In certain C90 cases, the above macro can't be defined by support module for Renesas CC compilers which works along with CMake. */
+    #define __STDC_VERSION__ 199409L
+  #elif (INTELISENSE_HELPER_C_STANDARD == 90)
+    /* C90 */
+    #define __STDC_VERSION__ 199409L
+  #elif (INTELISENSE_HELPER_C_STANDARD == 99)
+    /* C99 */
+    #define __STDC_VERSION__ 199901L
+  #endif
+#endif
+/*
+__STDC_VERSION__
+199409L (when -lang=c99 is not specified)
+199901L (when -lang=c99 is specified)
+*/
 
 /*
 4.2.5 #pragma directive

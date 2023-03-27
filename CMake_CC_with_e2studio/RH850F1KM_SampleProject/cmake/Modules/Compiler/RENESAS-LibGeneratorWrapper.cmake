@@ -116,7 +116,7 @@ endif()
 
 if(gen MATCHES "^Ninja")
   # Even if any messages are not bufferd by this wrapper script, all messages are buffered by Ninja.
-  # Therefore, in case of Ninja, there are several minutes without any messages during execution
+  # Therefore, in the case of Ninja, there are several minutes without any messages during execution
   # of library generator actually generating or regenerating libraries. Since such situation cannot
   # be avoided, we put all messages into the output buffer so that we remove unnecessary messages.
   execute_process(
@@ -128,7 +128,7 @@ if(gen MATCHES "^Ninja")
     RESULT_VARIABLE result
   )
 else()
-  # On the other hand, in case of other build systems such as Make, any messages are not buffered
+  # On the other hand, in the case of other build systems such as Make, any messages are not buffered
   # by the build system. Therefore, in such case, any messages are NOT buffered by this wrapper script
   # so that all messages are showed immediately and several minutes without any messages are avoided.
   execute_process(
@@ -176,7 +176,7 @@ if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL "") 
     # VSCode's Problem View needs `(num)` before `:`
     string(REGEX REPLACE "(^|\n)Libgen: (error|warning|info)([ :][^\n]+)" "\\1Libgen(0): \\2\\3" output "${output}")
   else()
-    # Visual Studio's Error List Window does not recognize the following severity in case of C/C++.
+    # Visual Studio's Error List Window does not recognize the following severity in the case of C/C++.
     # info, information, message, suggestion
     string(REGEX REPLACE "(^|\n)Libgen: info([ :][^\n]+)" "\\1Libgen: warning\\2 (Information)" output "${output}")
   endif()

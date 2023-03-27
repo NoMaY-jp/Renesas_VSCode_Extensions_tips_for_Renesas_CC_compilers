@@ -1,10 +1,10 @@
-set(msg ${CMAKE_ARGV4})
-set(gen ${CMAKE_ARGV5})
-set(e2studio_support_area ${CMAKE_ARGV6})
-set(arc ${CMAKE_ARGV7})
-set(ver ${CMAKE_ARGV8})
-set(cmd ${CMAKE_ARGV9})
-set(cmd_args_first 10)
+set(msg ${CMAKE_ARGV5})
+set(gen ${CMAKE_ARGV6})
+set(e2studio_support_area ${CMAKE_ARGV7})
+set(arc ${CMAKE_ARGV8})
+set(ver ${CMAKE_ARGV9})
+set(cmd ${CMAKE_ARGV10})
+set(cmd_args_first 11)
 math(EXPR cmd_args_last "${CMAKE_ARGC} - 1")
 # FIXME: Check list operation such as remove/add/replace/find/etc
 foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
@@ -22,9 +22,13 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
     set(src_name ${CMAKE_MATCH_1})
   elseif(CMAKE_ARGV${arg_n} MATCHES "^(-isa=|-cpu=|-Xcpu=)(.+)")
     set(target_opt ${CMAKE_MATCH_1}${CMAKE_MATCH_2})
+  elseif(CMAKE_ARGV${arg_n} MATCHES "^-std=(.+)")
+    # When clangd is used along with CMake, it is useful to tell clangd about `-std=`.
+    # But it is not a compilers' native flag. Therefore it is removed here.
+    set(CMAKE_ARGV${arg_n} " ")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^-isystem(.+)")
     # When clangd is used along with CMake, it is useful to tell clangd about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
-    # But `-isystem` is not a native flag but a flag for wrapper script. The flag is removed here.
+    # But it is not a compilers' native flag. Therefore it is removed here.
     set(CMAKE_ARGV${arg_n} " ")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^(-MF=)(.+)")
     set(dep_name ${CMAKE_MATCH_2})
@@ -222,7 +226,7 @@ if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL "") 
     string(REGEX REPLACE "(^|\n)<RENESAS-CC>: (error|warning|info)( [^\n]+)" "\\1<RENESAS-CC>(0): \\2\\3" output "${output}")
     string(REPLACE "<RENESAS-CC>" "${src_name}" output "${output}")
   else()
-    # Visual Studio's Error List Window does not recognize the following severity in case of C/C++.
+    # Visual Studio's Error List Window does not recognize the following severity in the case of C/C++.
     # info, information, message, suggestion
     string(REGEX REPLACE "([^\n]+)\\(([0-9]+)\\): info( [^\n]+)" "\\1(\\2): warning\\3 (Information)" output "${output}")
     string(REGEX REPLACE "(^|\n)<RENESAS-CC>: info( [^\n]+)" "\\1<RENESAS-CC>: warning\\2 (Information)" output "${output}")

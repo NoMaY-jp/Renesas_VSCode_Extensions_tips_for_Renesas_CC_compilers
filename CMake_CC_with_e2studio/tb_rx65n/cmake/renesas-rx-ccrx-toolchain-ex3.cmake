@@ -9,7 +9,9 @@ set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.re
 set(CMAKE_PROGRAM_PATH ${TOOLCHAIN_PATH} ${EXTERNAL_TOOLCHAIN_PATH})
 
 set(CMAKE_C_COMPILER ccrx -isa=rxv2)
-#set(CMAKE_RENESAS_XCONVERTER "") # In case of CS+, define the tool as "" like this or exclude the tool from `Path`.
+#set(CMAKE_RENESAS_XCONVERTER "") # In the case of CS+, define the tool as "" like this or exclude the tool from `Path`.
+
+set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
 
 ############################
 macro(SET_DIRECTORY_OPTIONS)
@@ -20,7 +22,7 @@ set(CMAKE_C_STANDARD 99)
 #add_library_generate_options(
 #-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
 #)
-# Unfortunately, in case of Ninja, there are several minutes without any messages during execution
+# Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 
 add_link_options(
@@ -106,10 +108,6 @@ endmacro()
 # If neither enable_language() nor project() activate C++ language mode, `-noprelink` is
 # specified automatically.
 
-#------------------------------------------------------
-# Note: Renesas compiler options' additional behavior
-#------------------------------------------------------
-
 #----------------------------------------------------
 # Note: Renesas compiler options' additional behavior
 #----------------------------------------------------
@@ -124,6 +122,16 @@ endmacro()
 
 # Assembler's `-define=` can accept a symbol without a value. In the case, the symbol is
 # regarded as being specified with 1. (i.e `-define=<symbol>=1`)
+
+# Clang-like -I, -D and @ options can be used.
+# Especially when LLVM clangd language server and Microsoft VSCode are used together with CMake,
+# using above options is recommended instead of CC-RX's -include=, -define= and -subcommand= options
+# if there are some reasons to use CC-RX's these options in the CMakeLists.txt and/or toolchain file.
+
+# When the language standard such as C90 or C99 is specified by CMake's language standard variables
+# and/or commands, the following definitions may be passed to not only LLVM clangd language server
+# but also CC-RX by `-D` option as follows.
+# -DINTELISENSE_HELPER_C_STANDARD=<value>
 
 #---------------------------------------------------------------------
 # Note: DebugComp, Internal and Utilities folder location of e2 studio

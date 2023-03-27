@@ -1,15 +1,12 @@
 # https://clangd.llvm.org/config
 
-# As of tody, this file is tentative.
 CompileFlags:
   Add:
-    - -std=c99
     - -U__llvm__
     - -D_CLANGD=1
     - --include=../.vscode/c_cpp_intellisense_helper.h
     - -m32 # -m16 doesn't seem to work
   Remove:
-    - -^-
     - -a*
     - -b*
     - -c*
@@ -18,9 +15,9 @@ CompileFlags:
     - -f*
     - -g*
     - -h*
-    # - -i* # -isystem=XXX is used.
-    - -insert_nop_with_label
-    - -ignore_files_misra
+    # - -i* # -isystem<directory> is used.
+    - -insert_nop_with_label=*
+    - -ignore_files_misra=*
     - -j*
     - -k*
     - -l*
@@ -30,7 +27,14 @@ CompileFlags:
     - -p*
     - -q*
     - -r*
-    - -s*
+    # - -s* # -std==<arg> is used.
+    - -signed_char
+    - -signed_bitfield
+    - -switch=*
+    - -stuff*
+    - -stack_protector*
+    - -strict_std
+    - -subcommand=*
     - -t*
     - -u*
     - -v*
@@ -38,7 +42,10 @@ CompileFlags:
     - -x*
     - -y*
     - -z*
+    - --
     - -O*
+  Compiler:
+    clang
 Diagnostics:
   Suppress:
     - drv_unknown_argument
