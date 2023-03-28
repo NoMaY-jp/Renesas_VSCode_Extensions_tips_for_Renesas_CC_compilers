@@ -127,11 +127,6 @@ endmacro()
 ## '-S'
 ## '-P'
 
-# Clang-like @ option can be used.
-# Especially when LLVM clangd language server and Microsoft VSCode are used together with CMake,
-# using above option is recommended instead of CC-RL's -subcommand= options
-# if there are some reasons to use CC-RL's this option in the CMakeLists.txt and/or toolchain file.
-
 # When the language standard such as C90 or C99 is specified by CMake's language standard variables
 # and/or commands, the following definitions may be passed to not only LLVM clangd language server
 # but also CC-RL by `-D` option as follows.

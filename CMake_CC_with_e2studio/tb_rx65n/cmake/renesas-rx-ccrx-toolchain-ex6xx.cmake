@@ -190,9 +190,9 @@ endmacro()
 # Assembler's `-define=` can accept a symbol without a value. In the case, the symbol is
 # regarded as being specified with 1. (i.e `-define=<symbol>=1`)
 
-# Clang-like -I, -D and @ options can be used.
+# Clang-like -I and -D options can be used.
 # Especially when LLVM clangd language server and Microsoft VSCode are used together with CMake,
-# using above options is recommended instead of CC-RX's -include=, -define= and -subcommand= options
+# using above options is recommended instead of CC-RX's -include= and -define= options
 # if there are some reasons to use CC-RX's these options in the CMakeLists.txt and/or toolchain file.
 
 # When the language standard such as C90 or C99 is specified by CMake's language standard variables
