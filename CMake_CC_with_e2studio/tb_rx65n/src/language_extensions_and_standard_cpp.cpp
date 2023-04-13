@@ -1,3 +1,19 @@
+#include <_h_c_lib.h> /* Nothing in the file are used but this is to check clangd/IntelliSense working. */
+
+int language_extensions_in_cpp_file(void);
+int language_extensions_in_cpp_file(void)
+{
+    volatile void __evenaccess *portbase = (volatile void __evenaccess *)0x8C000;
+
+    int *pt = (int *)__sectop("B");
+    int *pe = (int *)__secend("B");
+    int sz = __secsize("B");
+
+    __nop();
+
+    return *(int *)portbase + *pt + *pe + sz;
+}
+
 #if __cplusplus > 202002L
 const char *cpp_std = "C++23";
 #elif __cplusplus > 201703L
@@ -38,3 +54,13 @@ Includes cases where a file with the .cpp, .cp, or .cc extension is compiled wit
 #if defined(__STDC_VERSION__)
 #error Error: The `__STDC_VERSION__` is defined in C++ source.
 #endif
+#include <stdio.h> /* Be aware that including stdio.h result in defining __STDC_VERSION__. */
+#if defined(__STDC_VERSION__)
+#warning Warning : The `__STDC_VERSION__` is defined in C++ source.
+#endif
+
+void libgen_c99_standard_library_in_cpp_file(void);
+void libgen_c99_standard_library_in_cpp_file(void)
+{
+    snprintf((char*)0, 0, "");
+}

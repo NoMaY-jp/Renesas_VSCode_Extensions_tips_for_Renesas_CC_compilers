@@ -1,11 +1,13 @@
-int language_extensions(void);
-int language_extensions(void)
-{
-    volatile void __evenaccess * portbase = (volatile void __evenaccess *)0x8C000;
+#include <_h_c_lib.h> /* Nothing in the file are used but this is to check clangd/IntelliSense working. */
 
-    int *pt = __sectop( "B" );
-    int *pe = __secend( "B" );
-    int sz = __secsize( "B" );
+int language_extensions_in_c_file(void);
+int language_extensions_in_c_file(void)
+{
+    volatile void __evenaccess *portbase = (volatile void __evenaccess *)0x8C000;
+
+    int *pt = __sectop("B");
+    int *pe = __secend("B");
+    int sz = __secsize("B");
 
     __nop();
 
@@ -50,3 +52,11 @@ Includes cases where a file with the .c extension is compiled without specifying
 #if defined(__cplusplus)
 #error Error: The `__cplusplus` is defined in C++ source.
 #endif
+
+#include <stdio.h>
+
+void libgen_c99_standard_library_in_c_file(void);
+void libgen_c99_standard_library_in_c_file(void)
+{
+    snprintf(NULL, 0, "");
+}

@@ -9,7 +9,7 @@ math(EXPR cmd_args_last "${CMAKE_ARGC} - 1")
 # FIXME: Check list operation such as remove/add/replace/find/etc
 foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
   string(JOIN " " cmd_args_string ${cmd_args_string} ${CMAKE_ARGV${arg_n}})
-  # FIXME: Fix CMake's script mode option parser
+  # FIXME: Remove the following code because CMake's script mode option parser is fixed.
   if(CMAKE_ARGV${arg_n} MATCHES "^'(-P)'$") # This is not only for other than Ninja but also for Ninja because of interoperability.
     # As of today, compiler's `-P` option needs a workaround due to conflict with CMake's `-P` option for other than Ninja.
     set(CMAKE_ARGV${arg_n} ${CMAKE_MATCH_1})
@@ -22,12 +22,16 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
     set(src_name ${CMAKE_MATCH_1})
   elseif(CMAKE_ARGV${arg_n} MATCHES "^(-isa=|-cpu=|-Xcpu=)(.+)")
     set(target_opt ${CMAKE_MATCH_1}${CMAKE_MATCH_2})
-  elseif(CMAKE_ARGV${arg_n} MATCHES "^-std=(.+)")
-    # When clangd is used along with CMake, it is useful to tell clangd about `-std=`.
+  elseif(CMAKE_ARGV${arg_n} MATCHES "^-std=.+")
+    # When clangd or IntelliSense is used along with CMake, it is useful to tell them about `-std=`.
     # But it is not a compilers' native flag. Therefore it is removed here.
     set(CMAKE_ARGV${arg_n} " ")
-  elseif(CMAKE_ARGV${arg_n} MATCHES "^-isystem(.+)")
-    # When clangd is used along with CMake, it is useful to tell clangd about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
+  elseif(CMAKE_ARGV${arg_n} MATCHES "^-isystem.+")
+    # When clangd (not IntelliSense) is used along with CMake, it is useful to tell them about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
+    # But it is not a compilers' native flag. Therefore it is removed here.
+    set(CMAKE_ARGV${arg_n} " ")
+  elseif(CMAKE_ARGV${arg_n} MATCHES "^-include[^=].*")
+    # When clangd or IntelliSense is used along with CMake, it is useful to tell them about `-include<c_cpp_intellisense_helper.h>`.
     # But it is not a compilers' native flag. Therefore it is removed here.
     set(CMAKE_ARGV${arg_n} " ")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^(-MF=)(.+)")
@@ -40,11 +44,13 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
       list(APPEND dep_args_list -o${CMAKE_MATCH_2})
     endif()
     set(CMAKE_ARGV${arg_n} " ")
+  elseif(CMAKE_ARGV${arg_n} MATCHES "^(-MT=)(.+)")
+    set(obj_name ${CMAKE_MATCH_2})
+    list(APPEND dep_args_list ${CMAKE_MATCH_1}${CMAKE_MATCH_2})
+    set(CMAKE_ARGV${arg_n} " ")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^(-M)(.*)")
     list(APPEND dep_args_list ${CMAKE_MATCH_1}${CMAKE_MATCH_2})
     set(CMAKE_ARGV${arg_n} " ")
-  elseif(CMAKE_ARGV${arg_n} MATCHES "^(-output=obj=)(.+)") # This option is RX only.
-    set(obj_name ${CMAKE_MATCH_2})
   elseif(CMAKE_ARGV${arg_n} MATCHES "^-I(.+)" AND arc STREQUAL RX)
     #message("DEBUG: ${CMAKE_ARGV${arg_n}}")
     set(CMAKE_ARGV${arg_n} -include=${CMAKE_MATCH_1})
@@ -57,43 +63,73 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
     file(READ ${rsp_name} rsp_content_string)
     separate_arguments(rsp_content_list NATIVE_COMMAND ${rsp_content_string})
     foreach(opt ${rsp_content_list})
+      #message("DEBUG: ${opt}")
       if(opt MATCHES "^(-isa=|-cpu=|-Xcpu=)(.+)")
         set(target_opt ${CMAKE_MATCH_1}${CMAKE_MATCH_2})
       endif()
-      #message("DEBUG: ${opt}")
     endforeach()
-    # For not only CMake-generated subcommand files but also user own subcommand files (if it is desired by user).
-    if(CMAKE_ARGV${arg_n} MATCHES "^@")
-      if(arc STREQUAL RX)
-        foreach(opt ${rsp_content_list})
-          if(opt MATCHES "^-I(.+)")
-            #message("DEBUG: ${opt}")
-            string(JOIN " " sub_content_string ${sub_content_string} -include=${CMAKE_MATCH_1})
-          elseif(opt MATCHES "^-D(.+)")
-            #message("DEBUG: ${opt}")
-            string(JOIN " " sub_content_string ${sub_content_string} -define=${CMAKE_MATCH_1})
-          else()
-            string(JOIN " " sub_content_string ${sub_content_string} ${opt})
-          endif()
-        endforeach()
-        if(NOT sub_name)
-          # FIXME: Assert: obj_name
-          set(sub_name ${obj_name}.sub)
-          set(CMAKE_ARGV${arg_n} -subcommand=${sub_name})
-        else()
-          set(CMAKE_ARGV${arg_n} " ")
-        endif()
-      elseif(arc STREQUAL RL78)
-        set(CMAKE_ARGV${arg_n} -subcommand=${rsp_name})
+    foreach(opt ${rsp_content_list})
+      if(opt MATCHES "^-std=.+")
+        # When clangd or IntelliSense is used along with CMake, it is useful to tell them about `-std=`.
+        # But it is not a compilers' native flag. Therefore it is removed here.
+        # I.e. nothing to do but only set a flag.
+        set(sub_content_save true)
+      elseif(opt MATCHES "^-isystem.+")
+        # When clangd (not IntelliSense) is used along with CMake, it is useful to tell them about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
+        # But it is not a compilers' native flag. Therefore it is removed here.
+        # I.e. nothing to do but only set a flag.
+        set(sub_content_save true)
+      elseif(opt MATCHES "^-include[^=].*")
+        # When clangd or IntelliSense is used along with CMake, it is useful to tell them about `-include<c_cpp_intellisense_helper.h>`.
+        # But it is not a compilers' native flag. Therefore it is removed here.
+        # I.e. nothing to do but only set a flag.
+        set(sub_content_save true)
+      elseif(opt MATCHES "^-I(.+)" AND arc STREQUAL RX)
+        #message("DEBUG: ${opt}")
+        string(JOIN " " sub_content_string ${sub_content_string} -include=${CMAKE_MATCH_1})
+        set(sub_content_save true)
+      elseif(opt MATCHES "^-D(.+)" AND arc STREQUAL RX)
+        #message("DEBUG: ${opt}")
+        string(JOIN " " sub_content_string ${sub_content_string} -define=${CMAKE_MATCH_1})
+        set(sub_content_save true)
+      else()
+        string(JOIN " " sub_content_string ${sub_content_string} ${opt})
+      endif()
+    endforeach()
+  endif()
+endforeach()
+
+# Replace subcommand file names and/or subcommand file options if necessary. Of course, subcommand file itself if necessary.
+foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
+  if(CMAKE_ARGV${arg_n} MATCHES "^(@|-subcommand=)(.+)" AND (arc STREQUAL RX OR arc STREQUAL RL78))
+    if(sub_content_save)
+      if(NOT sub_name)
+        string(REGEX REPLACE "\\.[^.]+$" ".sub" sub_name ${obj_name})
+        set(CMAKE_ARGV${arg_n} -subcommand=${sub_name})
+        #message("DEBUG: sub_name=${sub_name}")
+        file(WRITE ${sub_name} ${sub_content_string})
+      else()
+        set(CMAKE_ARGV${arg_n} " ")
+      endif()
+    else()
+      if(CMAKE_MATCH_1 STREQUAL @)
+        set(CMAKE_ARGV${arg_n} -subcommand=${CMAKE_MATCH_2})
+      endif()
+    endif()
+  elseif(CMAKE_ARGV${arg_n} MATCHES "^@.+" AND arc STREQUAL RH850)
+    if(sub_content_save)
+      if(NOT sub_name)
+        string(REGEX REPLACE "\\.[^.]+$" ".sub" sub_name ${obj_name})
+        set(CMAKE_ARGV${arg_n} @${sub_name})
+        #message("DEBUG: sub_name=${sub_name}")
+        file(WRITE ${sub_name} ${sub_content_string})
+      else()
+        set(CMAKE_ARGV${arg_n} " ")
       endif()
     endif()
   endif()
   list(APPEND cmd_args_list ${CMAKE_ARGV${arg_n}})
 endforeach()
-if(sub_name)
-  #message("DEBUG: sub_name=${sub_name}")
-  file(WRITE ${sub_name} ${sub_content_string})
-endif()
 
 # In some cases, there are no target option during CMake's compiler check process.
 if(NOT target_opt)

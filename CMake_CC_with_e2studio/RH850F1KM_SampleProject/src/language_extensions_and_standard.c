@@ -1,5 +1,7 @@
-void language_extensions(void);
-void language_extensions(void)
+#include <_h_c_lib.h> /* Nothing in the file are used but this is to check clangd/IntelliSense working. */
+
+void language_extensions_in_c_file(void);
+void language_extensions_in_c_file(void)
 {
 #if defined(__INTELLISENSE__) || defined(_CLANGD)
     __fp16 fp16v; /* CC-RH professional version only */

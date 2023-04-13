@@ -84,6 +84,12 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 /*
 For other differnce between CC-RL and MSVC/Clang
 */
+#if defined(_WIN32)
+#undef _WIN32
+#endif
+#if defined(_MSC_VER)
+#undef _MSC_VER
+#endif
 #if defined(__INTELLISENSE__)
 #endif
 #if defined(_CLANGD)
@@ -150,11 +156,11 @@ signed long __macsi(signed int x, signed int y, signed long z);
 #endif
 
 /* To make IntelliSense work better for newlib, GCC c++ lib and clang cxx lib*/
-#ifdef _MSC_VER
-#undef _MSC_VER
-#endif
-#ifdef _WIN32
+#if defined(_WIN32)
 #undef _WIN32
+#endif
+#if defined(_MSC_VER)
+#undef _MSC_VER
 #endif
 
 #endif /* !defined( __GNUC__) && !defined( __llvm__ ) */

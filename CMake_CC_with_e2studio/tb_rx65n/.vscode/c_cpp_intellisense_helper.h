@@ -116,6 +116,12 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 /*
 For other differnce between CC-RX and MSVC/Clang
 */
+#if defined(_WIN32)
+#undef _WIN32
+#endif
+#if defined(_MSC_VER)
+#undef _MSC_VER
+#endif
 #if defined(__INTELLISENSE__)
 #endif
 #if defined(_CLANGD)

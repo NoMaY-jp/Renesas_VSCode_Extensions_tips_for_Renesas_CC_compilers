@@ -1,5 +1,7 @@
-int __callt language_extensions(void);
-int __callt language_extensions(void)
+#include <_h_c_lib.h> /* Nothing in the file are used but this is to check clangd/IntelliSense working. */
+
+int __callt language_extensions_in_c_file(void);
+int __callt language_extensions_in_c_file(void)
 {
     static int __saddr sv;
     static int __near nv;

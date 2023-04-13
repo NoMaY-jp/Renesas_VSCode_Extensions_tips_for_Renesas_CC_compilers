@@ -68,13 +68,26 @@ separate_arguments(cmd_args_list NATIVE_COMMAND ${tmp_string})
 # F0593305:Invalid command parameter "-lang=cpp"
 # F0593305:Invalid command parameter "-lang=ecpp"
 list(REMOVE_ITEM cmd_args_list -lang=cpp -lang=ecpp) # These may come from c_flags, compile_options, etc.
+# To avoid the following errors (these non native options are workaround for IntelliSense), remove the following items.
+# F0593305: Invalid command parameter "-IXXXX"
+# F0593305: Invalid command parameter "-DXXXX"
+# F0593305: Invalid command parameter "@XXXX"
+# F0593305: Invalid command parameter "-std=XXXX"
+# F0593305: Invalid command parameter "-isystemXXXX"
+# F0593305: Invalid command parameter "-includeXXXX"
+list(TRANSFORM cmd_args_list REPLACE "^-I.+" " ")
+list(TRANSFORM cmd_args_list REPLACE "^-D.+" " ")
+list(TRANSFORM cmd_args_list REPLACE "^@.+" " ")
+list(TRANSFORM cmd_args_list REPLACE "^-std=.+" " ")
+list(TRANSFORM cmd_args_list REPLACE "^-isystem.+" " ")
+list(TRANSFORM cmd_args_list REPLACE "^-include[^=].*" " ")
 # To avoid strange behavior (somehow always libraries are regenerated), remove the following items.
 list(REMOVE_ITEM cmd_args_list -debug)
 list(TRANSFORM cmd_args_list REPLACE "^-preinclude=.+" " ")
 # And other warnings and errors.  # FIXME: Are there more items?
-# W0591300:Command parameter specified twice `-XXXX`
+# W0591300:Command parameter specified twice `-output=XXXX`
 list(TRANSFORM cmd_args_list REPLACE "^-output=(prep|src|obj|dep)=.+" " ")
-# F0593305:Invalid command parameter `-XXXX`
+# F0593305:Invalid command parameter `-no_warning=XXXX`
 list(TRANSFORM cmd_args_list REPLACE "^-no_warning=.+" " ")
 list(REMOVE_ITEM cmd_args_list " ")
 
