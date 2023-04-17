@@ -25,7 +25,7 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 #define __DPFPU 1
 
 #if defined(__STDC_VERSION__) || !defined(__cplusplus)
-  /* Be aware that clangd doesn't define __STDC_VERSION__ when -std=c90 is specified. */
+  /* Be aware that clangd and IntelliSense don't define __STDC_VERSION__ when -std=c90 is specified. */
   #if defined(__STDC_VERSION__)
     #undef __STDC_VERSION__
   #endif

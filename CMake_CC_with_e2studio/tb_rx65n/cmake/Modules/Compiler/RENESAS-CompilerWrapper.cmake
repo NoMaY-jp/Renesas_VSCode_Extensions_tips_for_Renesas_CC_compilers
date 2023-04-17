@@ -27,7 +27,7 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
     # But it is not a compilers' native flag. Therefore it is removed here.
     set(CMAKE_ARGV${arg_n} " ")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^-isystem.+")
-    # When clangd (not IntelliSense) is used along with CMake, it is useful to tell them about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
+    # When clangd (not IntelliSense) is used along with CMake, it is useful to tell them about `-isystem${_RENESAS_COMPILER_INCLUDE_PATH}`.
     # But it is not a compilers' native flag. Therefore it is removed here.
     set(CMAKE_ARGV${arg_n} " ")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^-include[^=].*")
@@ -75,7 +75,7 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
         # I.e. nothing to do but only set a flag.
         set(sub_content_save true)
       elseif(opt MATCHES "^-isystem.+")
-        # When clangd (not IntelliSense) is used along with CMake, it is useful to tell them about `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
+        # When clangd (not IntelliSense) is used along with CMake, it is useful to tell them about `-isystem${_RENESAS_COMPILER_INCLUDE_PATH}`.
         # But it is not a compilers' native flag. Therefore it is removed here.
         # I.e. nothing to do but only set a flag.
         set(sub_content_save true)

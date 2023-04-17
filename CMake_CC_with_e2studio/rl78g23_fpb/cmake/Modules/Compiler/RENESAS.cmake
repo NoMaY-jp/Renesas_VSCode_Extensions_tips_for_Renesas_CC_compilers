@@ -175,7 +175,7 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITEC
     if(NOT DEFINED ${var})
       message("DEBUG: ${var} = undefined")
     elseif(NOT ${var})
-      message("DEBUG: ${var} = empty}")
+      message("DEBUG: ${var} = empty")
     else()
       message("DEBUG: ${var} = ${${var}}")
     endif()
@@ -241,7 +241,6 @@ macro(__compiler_renesas lang)
   endif()
 
   # CMAKE_MODULE_PATH hooks for Renesas compiler/assembler/linker/etc wrapper scripts.
-  # Somehow CMake's script mode checks a second name of existing file for a second `-P` even if it is after `--`.
   find_file(_RENESAS_COMPILER_WRAPPER   Compiler/RENESAS-CompilerWrapper.cmake     PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
   find_file(_RENESAS_ASSEMBLER_WRAPPER  Compiler/RENESAS-AssemblerWrapper.cmake    PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
   find_file(_RENESAS_LINKER_WRAPPER     Compiler/RENESAS-LinkerWrapper.cmake       PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -252,7 +251,6 @@ macro(__compiler_renesas lang)
   set(_RENESAS_LINKER_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LINKER_WRAPPER}\" ")
   set(_RENESAS_LIBGEN_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LIBGEN_WRAPPER}\" ")
   set(_RENESAS_XCONVERTER_WRAPPER "<CMAKE_COMMAND> -P \"${_RENESAS_XCONVERTER_WRAPPER}\" ")
-  get_filename_component(_RENESAS_${lang}_COMPILER_PATH ${CMAKE_${lang}_COMPILER}/../.. ABSOLUTE)
   if(CMAKE_RENESAS_XCONVERTER)
     get_filename_component(_RENESAS_E2STUDIO_SUPPORT_AREA ${CMAKE_RENESAS_XCONVERTER}/../../.. ABSOLUTE)
   endif()
@@ -279,8 +277,6 @@ macro(__compiler_renesas lang)
     # Note: <FLAGS> includes CMAKE_${lang}_FLAGS, CMAKE_${lang}_FLAGS_<config> and `language standard flags`.
     # When clangd is used along with CMake, be aware that it recognizes `-I` and `-D` but neither `-include=` nor `-define=`.
     # When clangd is used along with CMake, be aware that it recognizes `@` but not `-subcommand=`.
-    # When clangd is used along with CMake, it is useful to tell clangd about `-std=` and `-isystem${_RENESAS_${lang}_COMPILER_PATH}/include or inc`.
-    # But `-std=` and `-isystem` are not native flags but flags for wrapper script. (These flags are removed in the script.)
     if(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-isa=") # Not supported (at least as of today).
       set(CMAKE_INCLUDE_FLAG_${lang} "-I") # `-I` is not a native flag but a flag for wrapper script. (The flag is converted to `include=` in the script.)
@@ -291,17 +287,6 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -output=obj=<OBJECT> -nologo <DEFINES> <INCLUDES> <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -nologo <DEFINES> <INCLUDES> <FLAGS> -output=prep=<PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -nologo <DEFINES> <INCLUDES> <FLAGS> -output=src=<ASSEMBLY_SOURCE>")
-
-      if(${lang} STREQUAL "C")
-        if(CMAKE_C_STANDARD)
-          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
-        else()
-          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD_COMPUTED_DEFAULT} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
-        endif()
-      else()
-        # FIXME: CC-RX does not support any C++ standards.
-        string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c++98 -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/include\"")
-      endif()
 
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-cpu=") # Not supported (at least as of today).
@@ -314,14 +299,6 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -P -o <PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o <ASSEMBLY_SOURCE>")
 
-      if(${lang} STREQUAL "C")
-        if(CMAKE_C_STANDARD)
-          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
-        else()
-          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD_COMPUTED_DEFAULT} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
-        endif()
-      endif()
-
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RH850")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-Xcpu=") # Not supported (at least as of today).
       set(CMAKE_INCLUDE_FLAG_${lang} "-I") # This is the same as default setting.
@@ -332,14 +309,6 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -o<OBJECT> -c <DEFINES> <INCLUDES> <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -P -o<PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o<ASSEMBLY_SOURCE>")
-
-      if(${lang} STREQUAL "C")
-        if(CMAKE_C_STANDARD)
-          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
-        else()
-          string(APPEND CMAKE_${lang}_COMPILE_OBJECT " -std=c${CMAKE_C_STANDARD_COMPUTED_DEFAULT} -isystem\"${_RENESAS_${lang}_COMPILER_PATH}/inc\"")
-        endif()
-      endif()
 
     endif()
 
@@ -395,6 +364,107 @@ macro(__compiler_renesas lang)
 
     endif()
     unset(_RENESAS_DEBUG_G_GL_GDB)
+
+    # Add support of LLVM clangd language server and Microsoft IntelliSense engine (but IntelliSenseMode has to be windows-clang-x86 only).
+    # When clangd is used along with CMake, it is useful to tell it about `-isystem${_RENESAS_COMPILER_INCLUDE_PATH}` and `-std=`.
+    # When IntelliSense is used along with CMake, it is useful to tell it about `-include<c_cpp_intellisense_helper.h>`, `-I${_RENESAS_COMPILER_INCLUDE_PATH}` and `-std=`.
+    # But `-std=`, `-isystem` and `-include` are not native flags but flags for wrapper script. (These flags are removed in the script.)
+    if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
+      get_filename_component(_RENESAS_COMPILER_INCLUDE_PATH ${CMAKE_${lang}_COMPILER}/../../include ABSOLUTE)
+    else() # RL78 or RH850
+      get_filename_component(_RENESAS_COMPILER_INCLUDE_PATH ${CMAKE_${lang}_COMPILER}/../../inc ABSOLUTE)
+    endif()
+    if(CMAKE_BUILD_TYPE)
+      string(TOUPPER ${CMAKE_BUILD_TYPE} _RENESAS_CMAKE_BUILD_TYPE)
+    else() # If CMAKE_BUILD_TYPE wasn't defined.
+      set(_RENESAS_CMAKE_BUILD_TYPE "") # FIXME: Is this OK?
+    endif()
+    if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
+      set(_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS ${RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS})
+    else() # When RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS wasn't defined.
+      set(_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS "")
+    endif()
+    if(${lang} STREQUAL "C")
+      if(CMAKE_C_STANDARD EQUAL 90 OR NOT CMAKE_C_STANDARD)
+        if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
+          # In the case of IntelliSense,
+          # since the default language standard of windows-clang-x86 mode is C17, at least either C90 or C99 has to be specified.
+          # Moreover IntelliSense recognizes the following flags only in the case that these flgas are specified inside the `<FLAGS>` field
+          # and unfortunately this causes conversion of response files by the wrapper script in the case of Ninja.
+          # Note: If more than two `-std=` are specified, the later version of standard seems to be valid.
+         string(APPEND CMAKE_C_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " ${_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS} -I\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c90")
+        else()
+          # In the case of clangd,
+          # also since the default language standard is C17, either C90 or C99 has to be specified.
+          # Moreover IntelliSense doesn't seem to recognize the following flags outside of `<FLAG>` field
+          # Fortunately the following flags outside of `<FLAGS>` field doesn't cause conversion of response files in the wrapper script even for Ninja.
+          # Note: If more than two `-std=` are specified, the latter specified standard seems to be valid.
+          string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c90 <FLAGS>" CMAKE_C_COMPILE_OBJECT ${CMAKE_C_COMPILE_OBJECT})
+        endif()
+
+        if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
+          list(PREPEND CMAKE_C90_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=90)
+          list(PREPEND CMAKE_C90_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=90) # This doesn't work because of CMake's specification!
+          if(CMAKE_C99_STANDARD_COMPILE_OPTION)
+            list(PREPEND CMAKE_C99_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=99 -std=c99)
+            list(PREPEND CMAKE_C99_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=99 -std=c99)
+          endif()
+        else() # RL78 or RH850
+          list(PREPEND CMAKE_C90_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=90 -DINTELISENSE_HELPER_C_EXTENSIONS=0)
+          list(PREPEND CMAKE_C90_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=90) # This doesn't work because of CMake's specification!
+          if(CMAKE_C99_STANDARD_COMPILE_OPTION)
+            list(PREPEND CMAKE_C99_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=99 -DINTELISENSE_HELPER_C_EXTENSIONS=0 -std=c99)
+            list(PREPEND CMAKE_C99_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=99 -std=c99)
+          endif()
+        endif()
+      elseif(CMAKE_C_STANDARD EQUAL 99)
+        if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
+          # In the case of IntelliSense,
+          # since the default language standard of windows-clang-x86 mode is C17, at least either C90 or C99 has to be specified.
+          # Moreover IntelliSense recognizes the following flags only in the case that these flgas are specified inside the `<FLAGS>` field
+          # and unfortunately this causes conversion of response files by the wrapper script in the case of Ninja.
+          # Note: If more than two `-std=` are specified, the later version of standard seems to be valid.
+          string(APPEND CMAKE_C_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " ${_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS} -I\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c99")
+        else()
+          # In the case of clangd,
+          # also since the default language standard is C17, either C90 or C99 has to be specified.
+          # Moreover IntelliSense doesn't seem to recognize the following flags outside of `<FLAG>` field
+          # Fortunately the following flags outside of `<FLAGS>` field doesn't cause conversion of response files in the wrapper script even for Ninja.
+          # Note: If more than two `-std=` are specified, the latter specified standard seems to be valid.
+          string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c99 <FLAGS>" CMAKE_C_COMPILE_OBJECT ${CMAKE_C_COMPILE_OBJECT})
+        endif()
+
+        if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
+          list(PREPEND CMAKE_C90_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=90 -std=c90)
+          list(PREPEND CMAKE_C90_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=90 -std=c90) # This doesn't work because of CMake's specification!
+          if(CMAKE_C99_STANDARD_COMPILE_OPTION)
+            list(PREPEND CMAKE_C99_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=99)
+            list(PREPEND CMAKE_C99_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=99)
+          endif()
+        else() # RL78 or RH850
+          list(PREPEND CMAKE_C90_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=90 -DINTELISENSE_HELPER_C_EXTENSIONS=0 -std=c90)
+          list(PREPEND CMAKE_C90_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=90 -std=c90) # This doesn't work because of CMake's specification!
+          if(CMAKE_C99_STANDARD_COMPILE_OPTION)
+            list(PREPEND CMAKE_C99_STANDARD_COMPILE_OPTION  -DINTELISENSE_HELPER_C_STANDARD=99 -DINTELISENSE_HELPER_C_EXTENSIONS=0)
+            list(PREPEND CMAKE_C99_EXTENSION_COMPILE_OPTION -DINTELISENSE_HELPER_C_STANDARD=99)
+          endif()
+        endif()
+      endif()
+    elseif(${lang} STREQUAL "CXX")
+      # FIXME: CC-RX does not support any C++ standards.
+      if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
+        # In the case of IntelliSense,
+        # since the default language standard of windows-clang-x86 mode is C++14, something has to be specified.
+        string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " ${_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS} -I\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c++98")
+      else()
+        # In the case of clangd,
+        # since the default language standard is C++14, something has to be specified.
+        string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c++98 <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+      endif()
+    endif()
+    unset(_RENESAS_COMPILER_INCLUDE_PATH)
+    unset(_RENESAS_CMAKE_BUILD_TYPE)
+    unset(_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
 
   else() # ASM${ASM_DIALECT}
 
@@ -470,14 +540,14 @@ macro(__compiler_renesas lang)
 
   set(CMAKE_STATIC_LIBRARY_PREFIX "")
   set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")
-  
+
   set(CMAKE_FIND_LIBRARY_PREFIXES "")
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
 
   # This might be done in Modules/Platform/Generic.cmake in the case that `set(CMAKE_SYSTEM_NAME Generic)` was done.
   # The following setting here is for the case that it might not be done.
   set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)
-  
+
   #message("CMAKE_LIBRARY_PATH_FLAG       = ${CMAKE_LIBRARY_PATH_FLAG}") # This is defined elsewhere.
   #message("CMAKE_LIBRARY_PATH_TERMINATOR = ${CMAKE_LIBRARY_PATH_TERMINATOR}")
   #message("CMAKE_LINK_OBJECT_FILE_FLAG   = ${CMAKE_LINK_OBJECT_FILE_FLAG}")
@@ -556,6 +626,5 @@ macro(__compiler_renesas lang)
   unset(_RENESAS_LIBGEN_WRAPPER)
   unset(_RENESAS_XCONVERTER_WRAPPER)
   unset(_RENESAS_E2STUDIO_SUPPORT_AREA)
-  unset(_RENESAS_${lang}_COMPILER_PATH)
 
 endmacro()

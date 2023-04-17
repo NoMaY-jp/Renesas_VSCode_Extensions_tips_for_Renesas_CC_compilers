@@ -1,5 +1,6 @@
 /* Include file to test dependency scan for "Unix Makefiles" and "Ninja". */
 #include "test_dep_scan_etc_c.h"
+#include "test_dep_scan_etc_c_inc_2.h"
 
 /* Check definition via command line option */
 #if !defined(RH850_F1KM_TRGT) || (RH850_F1KM_TRGT != 1)

@@ -77,7 +77,6 @@ add_executable(${PROJECT_NAME}
     ${GSG_BASE_DIR}/src/sample_cpp.cpp # This file is activated in only CXX project.
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.src
-
     ${GSG_BASE_DIR}/src/language_extensions_and_standard.c
     ${GSG_BASE_DIR}/src/language_extensions_and_standard_cpp.cpp # This file is activated in only CXX project.
 )
@@ -91,6 +90,8 @@ target_include_directories(${PROJECT_NAME}
     ${GSG_BASE_DIR}/src/smc_gen/r_config
     ${GSG_BASE_DIR}/src/smc_gen/r_pincfg
     ${GSG_BASE_DIR}/src
+
+    ${GSG_BASE_DIR}/src/test_dep_scan_etc_inc_2
 )
 
 target_compile_definitions(${PROJECT_NAME}

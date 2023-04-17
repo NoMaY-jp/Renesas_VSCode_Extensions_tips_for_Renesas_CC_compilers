@@ -1,5 +1,6 @@
 ; Include file to test dependency scan for "Unix Makefiles" and "Ninja".
 $include "test_dep_scan_etc_asm.inc"
+$include "test_dep_scan_etc_asm_inc_2.inc"
 
 ; Check definition via command line option
 $if (RH850_F1KM_TRGT - 1)

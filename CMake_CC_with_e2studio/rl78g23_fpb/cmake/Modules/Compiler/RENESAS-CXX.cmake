@@ -117,17 +117,6 @@ if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
   endif()
 endif()
 
-__compiler_renesas(CXX)
-
-if((NOT DEFINED CMAKE_DEPENDS_USE_COMPILER OR CMAKE_DEPENDS_USE_COMPILER)
-    AND CMAKE_GENERATOR MATCHES "Makefiles|WMake"
-    AND CMAKE_DEPFILE_FLAGS_CXX
-    )
-  # dependencies are computed by the compiler itself
-  set(CMAKE_CXX_DEPFILE_FORMAT gcc)
-  set(CMAKE_CXX_DEPENDS_USE_COMPILER TRUE)
-endif()
-
 if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
   set(CMAKE_CXX98_STANDARD_COMPILE_OPTION "") # FIXME: CC-RX does not support any C++ standards.
   set(CMAKE_CXX98_EXTENSION_COMPILE_OPTION "") # FIXME: CC-RX does not support any C++ standards.
@@ -140,4 +129,15 @@ elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
 elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RH850")
   # Nothing to do here. (C++ is not supported.)
 
+endif()
+
+__compiler_renesas(CXX)
+
+if((NOT DEFINED CMAKE_DEPENDS_USE_COMPILER OR CMAKE_DEPENDS_USE_COMPILER)
+    AND CMAKE_GENERATOR MATCHES "Makefiles|WMake"
+    AND CMAKE_DEPFILE_FLAGS_CXX
+    )
+  # dependencies are computed by the compiler itself
+  set(CMAKE_CXX_DEPFILE_FORMAT gcc)
+  set(CMAKE_CXX_DEPENDS_USE_COMPILER TRUE)
 endif()

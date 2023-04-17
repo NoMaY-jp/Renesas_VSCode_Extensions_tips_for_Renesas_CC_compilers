@@ -44,7 +44,6 @@ add_executable(${PROJECT_NAME}
     ${GSG_BASE_DIR}/src/rl78g23_fpb_main.c
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.asm
-
     ${GSG_BASE_DIR}/src/language_extensions_and_standard.c
 )
 
@@ -59,6 +58,8 @@ target_include_directories(${PROJECT_NAME}
     ${GSG_BASE_DIR}/src/smc_gen/r_bsp
     ${GSG_BASE_DIR}/src/smc_gen/r_config
     ${GSG_BASE_DIR}/src
+
+    ${GSG_BASE_DIR}/src/test_dep_scan_etc_inc_2
 )
 
 target_compile_definitions(${PROJECT_NAME}
