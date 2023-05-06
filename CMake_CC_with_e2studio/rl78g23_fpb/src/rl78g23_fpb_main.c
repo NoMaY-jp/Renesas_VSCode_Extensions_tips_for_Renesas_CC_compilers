@@ -54,6 +54,9 @@
 
 void main(void);
 float f, g, h; /* for linking runtime library forcibly */
+#if defined(CPPAPP) && (CPPAPP != 0)
+int sample_cpp(int a, int b);
+#endif
 
 /***********************************************************************************************************************
 * Function Name: main
@@ -67,6 +70,9 @@ void main(void)
     EI();
 
     f = g + h;
+#if defined(CPPAPP) && (CPPAPP != 0)
+    sample_cpp( 3, 4 );
+#endif
     sample_lib1a_c( sample_lib2a_c( 1, 2 ), sample_lib3a_c( 3, 4 ) );
     sample_lib1b_c( sample_lib2b_c( 5, 6 ), sample_lib3a_c( 7, 8 ) );
 

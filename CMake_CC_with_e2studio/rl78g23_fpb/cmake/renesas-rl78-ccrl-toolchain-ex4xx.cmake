@@ -1,36 +1,85 @@
+set(CMAKE_SYSTEM_NAME Generic) # Tell CMake that this toolchain file is to be used for cross-compiling.
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Modules") # Tell CMake the path of support module for Renesas CC compilers.
-set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
-set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
+if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
+  set(CMAKE_CXX_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
+  set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
+elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
+  set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
+  set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
+endif()
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
 set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RL/V1.12.00/bin) # Quote the path with "..." if it includes space.
 set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_733684649/Utilities/ccrl) # Quote the path with "..." if it includes space.  # For e2 studio.
 
-set(CMAKE_PROGRAM_PATH ${TOOLCHAIN_PATH} ${EXTERNAL_TOOLCHAIN_PATH})
+if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
+  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
+  set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+endif()
+set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
 
-set(CMAKE_C_COMPILER ccrl -cpu=S3)
-#set(CMAKE_RENESAS_XCONVERTER "") # In the case of CS+, define the tool as "" like this or exclude the tool from `Path`.
+set(CMAKE_C_STANDARD 99) # Tell the support module for Renesas CC compilers about the language standard for initial setting.
+#set(CMAKE_CXX_STANDARD 14) # Tell the support module for Renesas CC compilers about the language standard for initial setting. As of today, only C++14 is supported.
 
-#########
-# FLAGS #
-#########
+############################
+macro(SET_DIRECTORY_OPTIONS)
+############################
 
 set(CMAKE_C_STANDARD 99)
+#set(CMAKE_C_STANDARD_REQUIRED ON) # CMake's default is OFF.
+#set(CMAKE_C_EXTENSIONS OFF) # CC-RX/RL/RH's default is ON and CC-RX has no strict standard option.
+#set(CMAKE_CXX_STANDARD 14) # As of today, only C++14 is supported.
+#set(CMAKE_CXX_STANDARD_REQUIRED ON) # CMake's default is OFF.
+#set(CMAKE_CXX_EXTENSIONS OFF) # CC-RX/RL's default is ON and the both have no strict standard option.
 
-set(CMAKE_EXE_LINKER_FLAGS "\
--library=rl78em4r.lib,rl78em4s99.lib,malloc_n.lib \
--device=DR7F100GLG.DVF \
--auto_section_layout \
--rom=.data=.dataR,.sdata=.sdataR \
--user_opt_byte=EFFFE8 \
--ocdbg=85 \
--security_id=00000000000000000000 \
--debug_monitor=1FF00-1FFFF \
-")
+set(CMAKE_EXECUTABLE_SUFFIX ".elf") # TODO: Not only using XConverter but also not using it.
 
-#######
-# END #
-#######
+add_compile_options( # `SHELL` notation may help to use space-separated flags in the generator expression.
+$<$<COMPILE_LANGUAGE:C,CXX>:-cpu=S3> # As of today, please don't use `SHELL` notation with `-cpu=` for CXX.
+"SHELL:$<$<COMPILE_LANGUAGE:C,CXX>:-goptimize -character_set=utf8 -refs_without_declaration -pass_source>"
+"SHELL:$<$<COMPILE_LANGUAGE:ASM>:-cpu=S3 -goptimize -character_set=utf8>"
+"SHELL:$<$<COMPILE_LANGUAGE:C,CXX>:-asmopt=-prn_path=. -cref=.>"
+"SHELL:$<$<COMPILE_LANGUAGE:ASM>:-prn_path=.>"
+"SHELL:$<$<COMPILE_LANGUAGE:C,CXX>:-g -g_line>" # This line is intended for test purpose.
+"SHELL:$<$<COMPILE_LANGUAGE:ASM>:-debug>" # This line is intended for test purpose.
+)
+
+add_link_options(
+-optimize=branch,symbol_delete -entry=_start -stack
+-library=rl78_compiler-rt.lib,rl78_libgloss.lib,rl78_libc.lib,rl78_libm.lib
+-device=DR7F100GLG.DVF
+-auto_section_layout
+-rom=.data=.dataR,.sdata=.sdataR
+-user_opt_byte=EFFFE8
+-ocdbg=85
+-security_id=00000000000000000000
+-debug_monitor=1FF00-1FFFF
+#-change_message=warning=2300,2142 -change_message=information=1321,1110 -total_size -list -show=all # See next two lines.
+LINKER:SHELL:-change_message=warning=2300,2142#,-change_message=information=1321,1110 # This style is intended for test purpos only.
+LINKER:-total_size,-list,-show=all # This style is intended for test purpos only.
+-form=s -byte_count=20 -xcopt=-dsp_section=DSP
+-debug) # This line is intended for test purpose.
+
+# The following setting selects the output type of compilation of the source.
+if(NOT DEFINED EXAMPLE_ALT_OUTPUT_TYPE)
+  set(EXAMPLE_ALT_OUTPUT_TYPE 0) # 0: Usual object or 1: Preprocessed source or 2: Assembly source.
+endif()
+if(EXAMPLE_ALT_OUTPUT_TYPE EQUAL 1)
+  set_property(SOURCE ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
+  APPEND PROPERTY COMPILE_OPTIONS
+  -P -o test_dep_scan_etc_c.p
+  )
+elseif(EXAMPLE_ALT_OUTPUT_TYPE EQUAL 2)
+  set_property(SOURCE ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
+  APPEND PROPERTY COMPILE_OPTIONS
+  -S -o test_dep_scan_etc_c.s
+  )
+endif()
+
+##########
+endmacro()
+##########
 
 #----------------------------------------
 # Note: Renesas pseudo exe linker options

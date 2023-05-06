@@ -51,6 +51,77 @@ For the processing to be performed when the -strict_std option is specified, see
 */
 
 /*
+3.2.2 Macros
+https://www.renesas.com/us/en/document/mat/cc-rl-c14-technical-preview-version-users-manual
+https://www.renesas.com/jp/ja/document/mat/cc-rl-c14-technical-preview-version-users-manual
+*/
+#if defined(__cplusplus)
+
+#if defined(__clang__)
+#undef __clang__
+#endif
+#define __clang__ 1
+#if defined(__STDC_HOSTED__)
+#undef __STDC_HOSTED__
+#endif
+#define __STDC_HOSTED__ 0
+#if defined(__STDC__)
+#undef __STDC__
+#endif
+#define __STDC__ 1
+#if defined(__STDC_VERSION__)
+#undef __STDC_VERSION__
+#endif
+#if defined(__STDC_IEC_559__)
+#undef __STDC_IEC_559__
+#endif
+/*
+Name             Definition when -lang=cpp14 is specified
+__cplusplus      201402L
+__clang__        1
+__STDC_HOSTED__  0
+__STDC__         1
+__STDC_VERSION__ Undefined
+__STDC_IEC_559__ Undefined
+*/
+
+#else /* defined(__cplusplus) */
+
+#if defined(__clang__)
+#undef __clang__
+#endif
+#if defined(__STDC_HOSTED__)
+#undef __STDC_HOSTED__
+#endif
+#if (INTELISENSE_HELPER_C_STANDARD == 99)
+#define __STDC_HOSTED__ 0
+#endif
+#if defined(__STDC__)
+#undef __STDC__
+#endif
+#if defined(INTELISENSE_HELPER_C_EXTENSIONS) && (INTELISENSE_HELPER_C_EXTENSIONS == 0)
+#define __STDC__ 1
+#endif
+#if defined(__STDC_IEC_559__)
+#undef __STDC_IEC_559__
+#endif
+#if (INTELISENSE_HELPER_C_STANDARD == 99)
+#define __STDC_IEC_559__ 1
+#endif
+/*
+Name             Definition when -lang=c or -lang=c99 is specified
+__cplusplus      Undefined
+__clang__        Undefined
+__STDC_HOSTED__  0 (when -lang=c99 is specified), Undefined (otherwise)
+__STDC__         1 (when -strict_std is specified), Undefined (otherwise)
+__STDC_VERSION__ 199409L (when both -lang=c and -strict_std are specified)
+                 199901L (when -lang=c99 is specified)
+__STDC_IEC_559__ 1 (when -lang=c99 is specified), Undefined (otherwise)
+*/
+
+#endif /* defined(__cplusplus) */
+
+/*
 4.2.1 Reserved words
 http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0201y.html
 http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0201y.html
@@ -79,7 +150,11 @@ http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00
 http://tool-support.renesas.com/autoupdate/support/onlinehelp/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0207y.html
 http://tool-support.renesas.com/autoupdate/support/onlinehelp/ja-JP/csp/V8.09.00/CS+.chm/Compiler-CCRL.chm/Output/ccrl04c0207y.html
 */
+#if !defined(__cplusplus)
 #include <builtin.h>
+#else
+#include <../../builtin.h>
+#endif
 
 /*
 For other differnce between CC-RL and MSVC/Clang
@@ -90,6 +165,20 @@ For other differnce between CC-RL and MSVC/Clang
 #if defined(_MSC_VER)
 #undef _MSC_VER
 #endif
+#if defined(__cplusplus)
+#if defined(__ELF__)
+#undef __ELF__
+#endif
+#define __ELF__ 1
+#if defined(_LIBCPP_HAS_NO_THREADS)
+#undef _LIBCPP_HAS_NO_THREADS
+#endif
+#define _LIBCPP_HAS_NO_THREADS 1
+#if defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#undef _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
+#endif
+#define _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER 1
+#endif /* defined(__cplusplus) */
 #if defined(__INTELLISENSE__)
 #endif
 #if defined(_CLANGD)

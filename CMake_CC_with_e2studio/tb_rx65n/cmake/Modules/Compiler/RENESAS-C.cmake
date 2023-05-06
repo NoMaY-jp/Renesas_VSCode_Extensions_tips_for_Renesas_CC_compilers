@@ -108,37 +108,37 @@ endif()
 if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
   if(CMAKE_C_COMPILER_VERSION VERSION_LESS 2.3)
     # CC-RX V2.02 or older does not support -MM and -MT which are necessary to generate GCC like dependency files.
-    message(FATAL_ERROR "Renesas RX Family Compiler version ${CMAKE_CXX_COMPILER_VERSION} is not supported by CMake.")
+    message(FATAL_ERROR "Renesas RX Family Compiler version ${CMAKE_C_COMPILER_VERSION} is not supported by CMake.")
   endif()
 endif()
 
 if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
-  set(CMAKE_C90_STANDARD_COMPILE_OPTION "") # No strict standard option but for preventing the decay behavior.
-  set(CMAKE_C90_EXTENSION_COMPILE_OPTION "")
+  set(CMAKE_C90_EXTENSION_COMPILE_OPTION "") # This is the default language standard of the compiler.
+  set(CMAKE_C90_STANDARD_COMPILE_OPTION  "") # No strict standard option.
 
-  set(CMAKE_C99_STANDARD_COMPILE_OPTION -lang=c99)
   set(CMAKE_C99_EXTENSION_COMPILE_OPTION -lang=c99)
+  set(CMAKE_C99_STANDARD_COMPILE_OPTION  -lang=c99) # No strict standard option.
 
   __compiler_check_default_language_standard(C 2.0 90)
 
 elseif(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
-  set(CMAKE_C90_STANDARD_COMPILE_OPTION -ansi)
-  set(CMAKE_C90_EXTENSION_COMPILE_OPTION "")
+  set(CMAKE_C90_EXTENSION_COMPILE_OPTION "") # This is the default language standard of the compiler.
+  set(CMAKE_C90_STANDARD_COMPILE_OPTION  -ansi)
 
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 1.6)
-    set(CMAKE_C99_STANDARD_COMPILE_OPTION -lang=c99 -ansi)
     set(CMAKE_C99_EXTENSION_COMPILE_OPTION -lang=c99)
+    set(CMAKE_C99_STANDARD_COMPILE_OPTION  -lang=c99 -ansi)
   endif()
 
   __compiler_check_default_language_standard(C 1.0 90)
 
 elseif(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RH850")
-  set(CMAKE_C90_STANDARD_COMPILE_OPTION -Xansi)
-  set(CMAKE_C90_EXTENSION_COMPILE_OPTION "")
+  set(CMAKE_C90_EXTENSION_COMPILE_OPTION "") # This is the default language standard of the compiler.
+  set(CMAKE_C90_STANDARD_COMPILE_OPTION  -Xansi)
 
   if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 1.7)
-    set(CMAKE_C99_STANDARD_COMPILE_OPTION -lang=c99 -Xansi)
     set(CMAKE_C99_EXTENSION_COMPILE_OPTION -lang=c99)
+    set(CMAKE_C99_STANDARD_COMPILE_OPTION  -lang=c99 -Xansi)
   endif()
 
   __compiler_check_default_language_standard(C 1.0 90)

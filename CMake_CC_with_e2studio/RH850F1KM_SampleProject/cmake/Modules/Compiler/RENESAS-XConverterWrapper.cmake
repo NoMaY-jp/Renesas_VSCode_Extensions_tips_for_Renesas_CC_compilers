@@ -44,15 +44,15 @@ execute_process(
 )
 
 # FIXME: Is it better to prepaire command line option something like explicit silencer flag?
-if(output MATCHES "Error")
+if(output MATCHES "Error|Usage")
   # Renesas X Converter does not return any error exit code greater than 0.
   set(result 1)
 
   # Append the error message for Visual Studio Code or Visual Studio.
-  if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL "")
+  if(($ENV{TERM_PROGRAM} STREQUAL "vscode") OR (NOT $ENV{VSCODE_PID} STREQUAL ""))
     # For Visual Studio Code's Problem Window.
     string(APPEND output "X Converter(0): error: conversion failed.")
-  elseif(NOT $ENV{VCTOOLTASK_USE_UNICODE_OUTPUT} STREQUAL ""))
+  elseif(NOT $ENV{VCTOOLTASK_USE_UNICODE_OUTPUT} STREQUAL "")
     # For Visual Studio's Error List Window.
     string(APPEND output "X Converter: error: conversion failed.")
   endif()

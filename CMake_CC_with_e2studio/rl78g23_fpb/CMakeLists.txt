@@ -1,6 +1,33 @@
 cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR) # 3.26.0-rc2 or later
 
-project(rl78g23_fpb C ASM)
+if(CMAKE_TOOLCHAIN_FILE MATCHES ".*(ex2xx|ex4xx|ex6xx)\\.cmake" AND NOT EXAMPLE_CXX_PROJ_TYPE)
+    # The following setting is to test the language definition order issue in project() (or enable_language()).
+    set(EXAMPLE_CXX_PROJ_TYPE 1) # 1: The order is `CXX C`. or 2: The order is `C CXX`.
+endif()
+
+if(CMAKE_TOOLCHAIN_FILE MATCHES ".*/cross\\.cmake$")
+
+    # The following setting can be set to 1 or 2 for CXX project example.
+    #set(EXAMPLE_CXX_PROJ_TYPE 1) # Not defined: Not CXX project. or 1: The order is `CXX C`. or 2: The order is `C CXX`.
+
+endif()
+
+if(NOT EXAMPLE_CXX_PROJ_TYPE)
+
+    project(rl78g23_fpb C ASM)
+    set(CPPAPP_DEF 0)
+
+elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
+
+    project(rl78g23_fpb CXX C ASM)
+    set(CPPAPP_DEF 1)
+
+elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
+
+    project(rl78g23_fpb C CXX ASM)
+    set(CPPAPP_DEF 1)
+
+endif()
 
 set(GSG_BASE_DIR ${CMAKE_SOURCE_DIR})
 
@@ -42,9 +69,11 @@ add_executable(${PROJECT_NAME}
     ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/rl78_g23/mcu_clocks.c
 
     ${GSG_BASE_DIR}/src/rl78g23_fpb_main.c
+    ${GSG_BASE_DIR}/src/sample_cpp.cpp # This file is activated in only CXX project.
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
     ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.asm
     ${GSG_BASE_DIR}/src/language_extensions_and_standard.c
+    ${GSG_BASE_DIR}/src/language_extensions_and_standard_cpp.cpp # This file is activated in only CXX project.
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -67,6 +96,7 @@ target_compile_definitions(${PROJECT_NAME}
     RL78_G23_FPB=1
     DEF_WITHOUT_VAL
     DEF_NOT_NUMBER=ABCXYZ
+    CPPAPP=${CPPAPP_DEF}
 )
 
 add_library(sample_lib1 ${DBG_RSPF_LIB1_SRC_C} lib_src/lib1/sample_lib1a_c.c lib_src/lib1/sample_lib1b_c.c)

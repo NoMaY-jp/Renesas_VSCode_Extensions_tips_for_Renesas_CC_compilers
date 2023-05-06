@@ -1,41 +1,67 @@
+set(CMAKE_SYSTEM_NAME Generic) # Tell CMake that this toolchain file is to be used for cross-compiling.
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Modules") # Tell CMake the path of support module for Renesas CC compilers.
-set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
-set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
+if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
+  set(CMAKE_CXX_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
+  set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
+elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
+  set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
+  set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
+endif()
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
 set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RL/V1.12.00/bin) # Quote the path with "..." if it includes space.
 set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_733684649/Utilities/ccrl) # Quote the path with "..." if it includes space.  # For e2 studio.
 
-set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
+  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
+  set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+endif()
 set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
 
 set(CMAKE_C_STANDARD 99) # Tell the support module for Renesas CC compilers about the language standard for initial setting.
+#set(CMAKE_CXX_STANDARD 14) # Tell the support module for Renesas CC compilers about the language standard for initial setting. As of today, only C++14 is supported.
 
-############################
-macro(SET_DIRECTORY_OPTIONS)
-############################
+#########################
+macro(SET_TARGET_OPTIONS)
+#########################
 
-set(CMAKE_C_STANDARD 99)
-#set(CMAKE_C_STANDARD_REQUIRED ON) # CMake's default is OFF.
-#set(CMAKE_C_EXTENSIONS OFF) # CC-RX/RL/RH's default is ON and CC-RX has no strict standard option.
+set_property(TARGET rl78g23_fpb sample_lib1 sample_lib2 sample_lib3 PROPERTY C_STANDARD 99)
+#set_property(TARGET rl78g23_fpb sample_lib1 sample_lib2 sample_lib3 PROPERTY C_STANDARD_REQUIRED ON) # CMake's default is OFF.
+#set_property(TARGET rl78g23_fpb sample_lib1 sample_lib2 sample_lib3 PROPERTY C_EXTENSIONS OFF) # CC-RX/RL/RH's default is ON and CC-RX has no strict standard option.
+#set_property(TARGET rl78g23_fpb sample_lib1 sample_lib2 sample_lib3 PROPERTY CXX_STANDARD 14) # As of today, only C++14 is supported.
+#set_property(TARGET rl78g23_fpb sample_lib1 sample_lib2 sample_lib3 PROPERTY CXX_STANDARD_REQUIRED ON) # CMake's default is OFF.
+#set_property(TARGET rl78g23_fpb sample_lib1 sample_lib2 sample_lib3 PROPERTY CXX_EXTENSIONS OFF) # CC-RX/RL's default is ON and the both have no strict standard option.
 
-add_compile_options( # Somehow space-separated flags (i.e. flags list) cannot be used in the following generator expressions.
-$<$<COMPILE_LANGUAGE:C>:-cpu=S3>
-$<$<COMPILE_LANGUAGE:C>:-goptimize>
-$<$<COMPILE_LANGUAGE:C>:-character_set=utf8>
-$<$<COMPILE_LANGUAGE:C>:-refs_without_declaration>
-$<$<COMPILE_LANGUAGE:C>:-pass_source>
-$<$<COMPILE_LANGUAGE:ASM>:-cpu=S3>
-$<$<COMPILE_LANGUAGE:ASM>:-goptimize>
-$<$<COMPILE_LANGUAGE:ASM>:-character_set=utf8>
-$<$<COMPILE_LANGUAGE:C>:-asmopt=-prn_path=.>
-$<$<COMPILE_LANGUAGE:C>:-cref=.>
+set_target_properties(rl78g23_fpb PROPERTIES SUFFIX ".elf") # TODO: Not only using XConverter but also not using it.
+
+target_compile_options(rl78g23_fpb PRIVATE
+$<$<COMPILE_LANGUAGE:C,CXX>:-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source>
+$<$<COMPILE_LANGUAGE:ASM>:-cpu=S3 -goptimize -character_set=utf8>
+$<$<COMPILE_LANGUAGE:C,CXX>:-asmopt=-prn_path=. -cref=.>
 $<$<COMPILE_LANGUAGE:ASM>:-prn_path=.>
+$<$<COMPILE_LANGUAGE:C,CXX>:-g -g_line> # This line is intended for test purpose.
+$<$<COMPILE_LANGUAGE:ASM>:-debug> # This line is intended for test purpose.
+)
+target_compile_options(sample_lib1 PRIVATE
+$<$<COMPILE_LANGUAGE:C>:-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source>
+$<$<COMPILE_LANGUAGE:C>:-asmopt=-prn_path=. -cref=.>
+$<$<COMPILE_LANGUAGE:C>:-g -g_line> # This line is intended for test purpose.
+)
+target_compile_options(sample_lib2 PRIVATE
+$<$<COMPILE_LANGUAGE:C>:-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source>
+$<$<COMPILE_LANGUAGE:C>:-asmopt=-prn_path=. -cref=.>
+$<$<COMPILE_LANGUAGE:C>:-g -g_line> # This line is intended for test purpose.
+)
+target_compile_options(sample_lib3 PRIVATE
+$<$<COMPILE_LANGUAGE:C>:-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source>
+$<$<COMPILE_LANGUAGE:C>:-asmopt=-prn_path=. -cref=.>
+$<$<COMPILE_LANGUAGE:C>:-g -g_line> # This line is intended for test purpose.
 )
 
-add_link_options(
+target_link_options(rl78g23_fpb PRIVATE
 -optimize=branch,symbol_delete -entry=_start -stack
--library=rl78em4r.lib,rl78em4s99.lib,malloc_n.lib
+-library=rl78_compiler-rt.lib,rl78_libgloss.lib,rl78_libc.lib,rl78_libm.lib
 -device=DR7F100GLG.DVF
 -auto_section_layout
 -rom=.data=.dataR,.sdata=.sdataR
@@ -43,8 +69,11 @@ add_link_options(
 -ocdbg=85
 -security_id=00000000000000000000
 -debug_monitor=1FF00-1FFFF
--change_message=warning=2300,2142 -change_message=information=1321,1110 -total_size -list -show=all
-)
+#-change_message=warning=2300,2142 -change_message=information=1321,1110 -total_size -list -show=all # See next two lines.
+LINKER:SHELL:-change_message=warning=2300,2142#,-change_message=information=1321,1110 # This style is intended for test purpos only.
+LINKER:-total_size,-list,-show=all # This style is intended for test purpos only.
+-form=s -byte_count=20 -xcopt=-dsp_section=DSP
+-debug) # This line is intended for test purpose.
 
 # The following setting selects the output type of compilation of the source.
 if(NOT DEFINED EXAMPLE_ALT_OUTPUT_TYPE)

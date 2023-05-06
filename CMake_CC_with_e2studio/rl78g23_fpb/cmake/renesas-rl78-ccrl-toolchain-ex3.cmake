@@ -11,7 +11,7 @@ set(CMAKE_PROGRAM_PATH ${TOOLCHAIN_PATH} ${EXTERNAL_TOOLCHAIN_PATH})
 set(CMAKE_C_COMPILER ccrl -cpu=S3)
 #set(CMAKE_RENESAS_XCONVERTER "") # In the case of CS+, define the tool as "" like this or exclude the tool from `Path`.
 
-set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
+set(CMAKE_C_STANDARD 99) # Tell the support module for Renesas CC compilers about the language standard for initial setting.
 
 ############################
 macro(SET_DIRECTORY_OPTIONS)
@@ -71,6 +71,12 @@ endmacro()
 # If `-library=` is specified with relative paths, both of the following folders are also searched.
 # <compiler path>/lib
 # <compiler path>
+
+# Additionally, in the case of CC-RL C++14, if `-library=` is specified with relative paths,
+# one of the following folders is also searched depending on `-cpu=' option used for compiler.
+# <compiler path>/lib/cxx/s1
+# <compiler path>/lib/cxx/s2
+# <compiler path>/lib/cxx/s3
 
 # If `-device=` is specified with relative path, either of the following folders is also searched.
 # <install path of CS+ for CC>/Device/RL78/Devicefile

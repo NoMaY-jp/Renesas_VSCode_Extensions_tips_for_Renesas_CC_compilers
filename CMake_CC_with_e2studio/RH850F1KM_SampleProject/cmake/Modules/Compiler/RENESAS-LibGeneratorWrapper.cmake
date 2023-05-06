@@ -17,8 +17,10 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
     set(c_arg1 ${CMAKE_MATCH_1})
   elseif(CMAKE_ARGV${arg_n} MATCHES "^-compile_options_c_flags=(.+)")
     string(REPLACE ",-" " -" c_flags "${CMAKE_MATCH_1}")
+##  Renesas Library Generator doesn't need C++ option information (as of today).
 ##  elseif(CMAKE_ARGV${arg_n} MATCHES "^-compile_options_cxx_arg1=(.+)")
 ##    set(cxx_arg1 ${CMAKE_MATCH_1})
+##  Renesas Library Generator doesn't need C++ option information (as of today).
 ##  elseif(CMAKE_ARGV${arg_n} MATCHES "^-compile_options_cxx_flags=(.+)")
 ##    string(REPLACE ",-" " -" cxx_flags "${CMAKE_MATCH_1}")
   elseif(CMAKE_ARGV${arg_n} MATCHES "^-compile_options_c_std=(.+)")

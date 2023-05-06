@@ -2,13 +2,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Modules") # Tell CMake the path
 if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
   set(CMAKE_CXX_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
   set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-  #set(CMAKE_C_COMPILER_ID RENESAS) # This can be set simultaneously.
-  #set(CMAKE_C_COMPILER_ID_RUN TRUE) # This can be set simultaneously.
 elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
   set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
   set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-  #set(CMAKE_CXX_COMPILER_ID RENESAS) # This can be set simultaneously.
-  #set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # This can be set simultaneously.
 endif()
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
@@ -22,7 +18,7 @@ elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
 endif()
 set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
 
-set(CMAKE_C_STANDARD 99) # Tell `clangd` language server about the language standard. (This is global at least as of today.)
+set(CMAKE_C_STANDARD 99) # Tell the support module for Renesas CC compilers about the language standard for initial setting.
 
 ############################
 macro(SET_DIRECTORY_OPTIONS)

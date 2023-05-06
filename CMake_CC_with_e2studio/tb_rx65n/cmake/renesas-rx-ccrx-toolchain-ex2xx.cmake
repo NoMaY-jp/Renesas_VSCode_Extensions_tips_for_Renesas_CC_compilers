@@ -2,13 +2,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Modules") # Tell CMake the path
 if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
   set(CMAKE_CXX_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
   set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-  #set(CMAKE_C_COMPILER_ID RENESAS) # This can be set simultaneously.
-  #set(CMAKE_C_COMPILER_ID_RUN TRUE) # This can be set simultaneously.
 elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
   set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
   set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-  #set(CMAKE_CXX_COMPILER_ID RENESAS) # This can be set simultaneously.
-  #set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # This can be set simultaneously.
 endif()
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
@@ -59,8 +55,8 @@ set(CMAKE_EXE_LINKER_FLAGS "-optimize=short_format,branch,symbol_delete -stack \
 -rom=D=R,D_1=R_1,D_2=R_2 \
 -vect=_undefined_interrupt_source_isr \
 -change_message=warning=2300,2142 -total_size -list -show=all \
--form=s -byte_count=20 -xcopt=-dsp_section=DSP"
--debug) # This line is intended for test purpose.
+-form=s -byte_count=20 -xcopt=-dsp_section=DSP \
+-debug") # This line is intended for test purpose.
 # If you want to use `C$*` string for `-start` flag, please take care of `$` character as above.
 # Fortunately, in the case of Ninja, simple single `$` still can be used for `-start` flag.
 

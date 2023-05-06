@@ -14,8 +14,8 @@ set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe
 #########
 
 set(CMAKE_C_STANDARD 99)
-#set(CMAKE_C_STANDARD_REQUIRED ON) # CMake's default is OFF
-#set(CMAKE_C_EXTENSIONS OFF) # CC-RX/RL/RH's default is ON
+#set(CMAKE_C_STANDARD_REQUIRED ON) # CMake's default is OFF.
+#set(CMAKE_C_EXTENSIONS OFF) # CC-RX/RL/RH's default is ON and CC-RX has no strict standard option.
 
 set(CMAKE_C_FLAGS   "-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source")
 set(CMAKE_ASM_FLAGS "-cpu=S3 -goptimize -character_set=utf8")
@@ -75,6 +75,12 @@ set(CMAKE_EXE_LINKER_FLAGS "-optimize=branch,symbol_delete -entry=_start -stack 
 # If `-library=` is specified with relative paths, both of the following folders are also searched.
 # <compiler path>/lib
 # <compiler path>
+
+# Additionally, in the case of CC-RL C++14, if `-library=` is specified with relative paths,
+# one of the following folders is also searched depending on `-cpu=' option used for compiler.
+# <compiler path>/lib/cxx/s1
+# <compiler path>/lib/cxx/s2
+# <compiler path>/lib/cxx/s3
 
 # If `-device=` is specified with relative path, either of the following folders is also searched.
 # <install path of CS+ for CC>/Device/RL78/Devicefile

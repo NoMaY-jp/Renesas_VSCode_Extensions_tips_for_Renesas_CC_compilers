@@ -100,7 +100,7 @@ if(NOT CMAKE_CXX_COMPILER_ARCHITECTURE_ID)
 elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
   # Nothing to do here.
 elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
-  message(FATAL_ERROR "C++ is not supported by Renesas RL78 Family Compiler.")
+  # Nothing to do here.
 elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RH850")
   message(FATAL_ERROR "C++ is not supported by Renesas RH850 Family Compiler.")
 else()
@@ -112,19 +112,30 @@ if(NOT CMAKE_CXX_COMPILER_VERSION)
 endif()
 
 if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 2.0)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 2.3)
+    # CC-RX V2.02 or older does not support -MM and -MT which are necessary to generate GCC like dependency files.
     message(FATAL_ERROR "Renesas RX Family Compiler version ${CMAKE_CXX_COMPILER_VERSION} is not supported by CMake.")
+  endif()
+elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 1.12)
+    # CC-RL V1.12 or older does not support C++.
+    message(FATAL_ERROR "Renesas RL78 Family Compiler version ${CMAKE_CXX_COMPILER_VERSION} does not support C++.")
   endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
-  set(CMAKE_CXX98_STANDARD_COMPILE_OPTION "") # FIXME: CC-RX does not support any C++ standards.
-  set(CMAKE_CXX98_EXTENSION_COMPILE_OPTION "") # FIXME: CC-RX does not support any C++ standards.
+  # FIXME: CC-RX does not support any C++ standards.
+  set(CMAKE_CXX98_EXTENSION_COMPILE_OPTION "") # Setting `-lang=cpp` doesn't work because of CMake's specification!
+  set(CMAKE_CXX98_STANDARD_COMPILE_OPTION  "") # Don't set `-lang=cpp` because of the workaround for above problem!
 
-  __compiler_check_default_language_standard(CXX 2.0 98) # FIXME: CC-RX does not support any C++ standards.
+  # FIXME: CC-RX does not support any C++ standards.
+  __compiler_check_default_language_standard(CXX 2.0 98)
 
 elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
-  # Nothing to do here. (C++ is not supported.)
+  set(CMAKE_CXX14_EXTENSION_COMPILE_OPTION "") # Setting `-lang=cpp14` doesn't work because of CMake's specification!
+  set(CMAKE_CXX14_STANDARD_COMPILE_OPTION  "") # Don't set `-lang=cpp14` because of the workaround for above problem!
+
+  __compiler_check_default_language_standard(CXX 1.12 14)
 
 elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RH850")
   # Nothing to do here. (C++ is not supported.)

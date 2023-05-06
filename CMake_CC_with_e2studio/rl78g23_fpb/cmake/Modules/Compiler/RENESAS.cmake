@@ -76,13 +76,46 @@ if(NOT DEFINED _RENESAS_NIGHTLY_TEST_MSG)
   set(_RENESAS_NIGHTLY_TEST_MSG 0)
 endif()
 
+if(CMAKE_C_COMPILER_ARCHITECTURE_ID MATCHES "^(RX|RL78)$" OR CMAKE_CXX_COMPILER_ARCHITECTURE_ID MATCHES "^(RX|RL78)$")
+  function(__compiler_renesas_debug_disp_var var)
+    if(NOT DEFINED ${var})
+      message("DEBUG: ${var} = undefined")
+    elseif(NOT ${var})
+      message("DEBUG: ${var} = empty")
+    else()
+      message("DEBUG: ${var} = ${${var}}")
+    endif()
+  endfunction()
+
+  # The following code is necessary after re-configuration without compiler search.
+  # In that case, Modules/Compiler/RENESAS-FindBinUtils.cmake is not used.
+  #__compiler_renesas_debug_disp_var(CMAKE_C_FLAGS)
+  #__compiler_renesas_debug_disp_var(CMAKE_CXX_FLAGS)
+  if(CMAKE_C_COMPILER AND CMAKE_CXX_COMPILER)
+    if((NOT CMAKE_CXX_FLAGS) AND CMAKE_C_FLAGS)
+      set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
+      string(REGEX REPLACE "^(|.* )-lang=[^ ]* *" "\\1" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    endif()
+    if((NOT CMAKE_C_FLAGS) AND CMAKE_CXX_FLAGS)
+      set(CMAKE_C_FLAGS ${CMAKE_CXX_FLAGS})
+      string(REGEX REPLACE "^(|.* )-lang=[^ ]* *" "\\1" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+      if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX" )
+        string(REGEX REPLACE "^(|.* )-rtti=[^ ]* *" "\\1" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+        string(REGEX REPLACE "^(|.* )-exception *"  "\\1" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+      endif()
+    endif()
+  endif()
+  #__compiler_renesas_debug_disp_var(CMAKE_C_FLAGS)
+  #__compiler_renesas_debug_disp_var(CMAKE_CXX_FLAGS)
+endif()
+
 if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX" )
   function(add_library_generate_options)
     set(opts_list ${ARGV})
     #list(JOIN opts_list " " opts_string) # DEBUG
     #message("DEBUG: add_library_generate_options: argv: ${opts_string}")
 
-    # The `-lbgopt=` is not a native option of either Renesas Linker or Renesas Library Generator.
+    # The `-lbgopt=` is not a native flag of either Renesas Linker or Renesas Library Generator.
     # It is intended to be used for cmake wrapper scripts for Renesas build tools.
     list(JOIN opts_list "," opts_string)
     set(lopt -lbgopt=${opts_string})
@@ -95,7 +128,7 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITEC
     #list(JOIN argv_list " " argv_string) # DEBUG
     #message("DEBUG: target_library_generate_options: argv: ${argv_string}")
 
-    # The `-lbgopt=` is not a native option of either Renesas Linker or Renesas Library Generator.
+    # The `-lbgopt=` is not a native flag of either Renesas Linker or Renesas Library Generator.
     # It is intended to be used for cmake wrapper scripts for Renesas build tools.
     list(POP_FRONT argv_list args_list)
     foreach(arg ${argv_list})
@@ -122,12 +155,23 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITEC
   endfunction()
 
   function(__init_library_generate_options)
+    set(lopt -link_language=$<LINK_LANGUAGE>) # At this moment, this is just a generator expresiion.
+    add_link_options(${lopt})
+    #message("DEBUG: __init_library_generate_options: LINK_LANGUAGE: ${lopt}")
+
+    # Renesas Library Generator needs only C standard information.
+    set(lopt -compile_options_c_std=-lang=c$<TARGET_PROPERTY:C_STANDARD>) # At this moment, this is just a generator expresiion.
+    add_link_options(${lopt})
+    #message("DEBUG: __init_library_generate_options: C_STANDARD: ${lopt}")
+
+    # Renesas Library Generator needs only C option information.
     if(CMAKE_C_COMPILER_ARG1)
       set(lopt -compile_options_c_arg1=${CMAKE_C_COMPILER_ARG1})
       add_link_options(${lopt})
       #message("DEBUG: __init_library_generate_options: CMAKE_C_COMPILER_ARG1: ${lopt}")
     endif()
 
+    # Renesas Library Generator needs only C option information.
     if(CMAKE_C_FLAGS)
       separate_arguments(c_flags_list NATIVE_COMMAND "${CMAKE_C_FLAGS}")
       list(JOIN c_flags_list "," c_flags_string)
@@ -136,12 +180,14 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITEC
       #message("DEBUG: __init_library_generate_options: CMAKE_C_FLAGS: ${lopt}")
     endif()
 
+##    Renesas Library Generator doesn't need C++ option information (as of today).
 ##    if(CMAKE_CXX_COMPILER_ARG1)
 ##      set(lopt -compile_options_cxx_arg1=${CMAKE_CXX_COMPILER_ARG1})
 ##      add_link_options(${lopt})
 ##      message("DEBUG: __init_library_generate_options: CMAKE_CXX_COMPILER_ARG1: ${lopt}")
 ##    endif()
 
+##    Renesas Library Generator doesn't need C++ option information (as of today).
 ##    if(CMAKE_CXX_FLAGS)
 ##      separate_arguments(cxx_flags_list NATIVE_COMMAND "${CMAKE_CXX_FLAGS}")
 ##      list(JOIN cxx_flags_list "," cxx_flags_string)
@@ -150,17 +196,9 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITEC
 ##      message("DEBUG: __init_library_generate_options: CMAKE_CXX_FLAGS: ${lopt}")
 ##    endif()
 
-    set(lopt -compile_options_c_std=-lang=c$<TARGET_PROPERTY:C_STANDARD>) # At this moment, this is just a generator expresiion.
-    add_link_options(${lopt})
-    #message("DEBUG: __init_library_generate_options: C_STANDARD: ${lopt}")
-
     set(lopt -compile_options=$<JOIN:$<TARGET_PROPERTY:COMPILE_OPTIONS>,$<COMMA>>) # At this moment, this is just a generator expresiion.
     add_link_options(${lopt})
     #message("DEBUG: __init_library_generate_options: COMPILE_OPTIONS: ${lopt}")
-
-    set(lopt -link_language=$<LINK_LANGUAGE>) # At this moment, this is just a generator expresiion.
-    add_link_options(${lopt})
-    #message("DEBUG: __init_library_generate_options: LINK_LANGUAGE: ${lopt}")
 
     if(CMAKE_LBG_FLAGS)
       separate_arguments(lbg_flags_list NATIVE_COMMAND "${CMAKE_LBG_FLAGS}")
@@ -171,36 +209,35 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" OR CMAKE_CXX_COMPILER_ARCHITEC
     endif()
   endfunction()
 
-  function(__compiler_renesas_debug_disp_var var)
-    if(NOT DEFINED ${var})
-      message("DEBUG: ${var} = undefined")
-    elseif(NOT ${var})
-      message("DEBUG: ${var} = empty")
-    else()
-      message("DEBUG: ${var} = ${${var}}")
-    endif()
-  endfunction()
-
-  # The following code is necessary after re-configuration without compiler search.
-  # In that case, Modules/Compiler/RENESAS-FindBinUtils.cmake is not used.
-  #__compiler_renesas_debug_disp_var(CMAKE_C_FLAGS)
-  #__compiler_renesas_debug_disp_var(CMAKE_CXX_FLAGS)
-  if(CMAKE_C_COMPILER AND CMAKE_CXX_COMPILER)
-    if((NOT CMAKE_CXX_FLAGS) AND CMAKE_C_FLAGS)
-      set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
-      string(REGEX REPLACE "^(|.* )-lang=[^ ]* *" "\\1" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-    endif()
-    if((NOT CMAKE_C_FLAGS) AND CMAKE_CXX_FLAGS)
-      set(CMAKE_C_FLAGS ${CMAKE_CXX_FLAGS})
-      string(REGEX REPLACE "^(|.* )-lang=[^ ]* *" "\\1" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-      string(REGEX REPLACE "^(|.* )-rtti=[^ ]* *" "\\1" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-      string(REGEX REPLACE "^(|.* )-exception *"  "\\1" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-    endif()
-  endif()
-  #__compiler_renesas_debug_disp_var(CMAKE_C_FLAGS)
-  #__compiler_renesas_debug_disp_var(CMAKE_CXX_FLAGS)
-
   __init_library_generate_options()
+
+elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RL78" ) # The condition CMAKE_C_COMPILER_ARCHITECTURE_ID STREQUAL "RX" is not necessary.
+    function(__init_link_cxx_options)
+      set(lopt -link_language=$<LINK_LANGUAGE>) # At this moment, this is just a generator expresiion.
+      add_link_options(${lopt})
+      #message("DEBUG: __init_link_cxx_options: LINK_LANGUAGE: ${lopt}")
+
+      if(CMAKE_CXX_COMPILER_ARG1 MATCHES "(^| )(-cpu=[^ ]+)( |$)")
+        set(lopt -compile_options=${CMAKE_MATCH_2})
+        add_link_options(${lopt})
+        #message("DEBUG: __init_link_cxx_options: CMAKE_CXX_COMPILER_ARG1: ${lopt}")
+      endif()
+
+      if(CMAKE_CXX_FLAGS MATCHES "(^| )(-cpu=[^ ]+)( |$)")
+        set(lopt -compile_options=${CMAKE_MATCH_2})
+        add_link_options(${lopt})
+        #message("DEBUG: __init_link_cxx_options: CMAKE_CXX_FLAGS: ${lopt}")
+      endif()
+
+      # In the case of linking CXX executable, only CXX compile flags are included in $<TARGET_PROPERTY:COMPILE_OPTIONS>.
+      # FIXME: To be more readable.
+      set(lopt "$<$<BOOL:$<FILTER:$<TARGET_PROPERTY:COMPILE_OPTIONS>,INCLUDE,^-cpu=[^ ]+$>>:-compile_options=$<JOIN:$<FILTER:$<TARGET_PROPERTY:COMPILE_OPTIONS>,INCLUDE,^-cpu=[^ ]+$>,$<COMMA>>>") # At this moment, this is just a generator expresiion.
+      add_link_options(${lopt})
+      #message("DEBUG: __init_link_cxx_options: COMPILE_OPTIONS_TARGE: ${lopt}")
+    endfunction()
+
+    __init_link_cxx_options()
+
 endif()
 
 #message("DEBUG: RENESAS.cmake is included for the following language.")
@@ -283,10 +320,16 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_DEFINE_FLAG "-D") # `-D` is not a native flag but a flag for wrapper script. (The flag is converted to `define=` in the script.)
       set(CMAKE_${lang}_RESPONSE_FILE_FLAG "@") # `@` is not a native flag but a flag for wrapper script.
       set(CMAKE_DEPFILE_FLAGS_${lang} "-MM -MT=<OBJECT> -MF=<DEP_FILE>") # `-MF=` is not a native flag but a flag for wrapper script.
-      string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
-      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -output=obj=<OBJECT> -nologo <DEFINES> <INCLUDES> <FLAGS>")
-      set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -nologo <DEFINES> <INCLUDES> <FLAGS> -output=prep=<PREPROCESSED_SOURCE>")
-      set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -nologo <DEFINES> <INCLUDES> <FLAGS> -output=src=<ASSEMBLY_SOURCE>")
+      if(${lang} STREQUAL "CXX")
+        # The `-lang_cpp=` is not a native flag of Renesas compilers. It is for Renesas compiler wrapper script.
+        # The flag may be removed(or, in other word, overridden) by a `-lang=` flag which is specified inside the `<FLAGS>` field
+        string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER> -lang_cpp=cpp")
+      else()
+        string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
+      endif()
+      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> -nologo -output=obj=<OBJECT> <FLAGS>")
+      set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> -nologo <FLAGS> -output=prep=<PREPROCESSED_SOURCE>")
+      set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> -nologo <FLAGS> -output=src=<ASSEMBLY_SOURCE>")
 
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-cpu=") # Not supported (at least as of today).
@@ -294,8 +337,14 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_DEFINE_FLAG "-D") # This is the same as default setting.
       set(CMAKE_${lang}_RESPONSE_FILE_FLAG "@") # `@` is not a native flag but a flag for wrapper script.
       set(CMAKE_DEPFILE_FLAGS_${lang} "-M -MT=<OBJECT> -MF=<DEP_FILE>") # `-MF=` is not a native flag but a flag for wrapper script.
-      string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
-      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -c -o <OBJECT> <DEFINES> <INCLUDES> <FLAGS>")
+      if(${lang} STREQUAL "CXX")
+        # The `-lang_cpp=` is not a native flag of Renesas compilers. It is for Renesas compiler wrapper script.
+        # The flag may be removed(or, in other word, overridden) by a `-lang=` flag which is specified inside the `<FLAGS>` field
+        string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER> -lang_cpp=cpp14")
+      else()
+        string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
+      endif()
+      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> -c -o <OBJECT> <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -P -o <PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o <ASSEMBLY_SOURCE>")
 
@@ -306,7 +355,7 @@ macro(__compiler_renesas lang)
       set(CMAKE_${lang}_RESPONSE_FILE_FLAG "@") # This is the same as default setting.
       set(CMAKE_DEPFILE_FLAGS_${lang} "-M -MT=<OBJECT> -MF=<DEP_FILE>") # `-MF=` is not a native flag but a flag for wrapper script.
       string(APPEND _RENESAS_COMPILER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
-      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> -o<OBJECT> -c <DEFINES> <INCLUDES> <FLAGS>")
+      set(CMAKE_${lang}_COMPILE_OBJECT             "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> -o<OBJECT> -c <FLAGS>")
       set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -P -o<PREPROCESSED_SOURCE>")
       set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "${_RENESAS_COMPILER_WRAPPER} <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o<ASSEMBLY_SOURCE>")
 
@@ -336,6 +385,16 @@ macro(__compiler_renesas lang)
       string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT " ${_RENESAS_DEBUG_G_GL_GDB} -define=NDEBUG")
 
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
+      if(CMAKE_${lang}_COMPILER_VERSION VERSION_GREATER_EQUAL 1.12)
+        if(${lang} STREQUAL "C")
+          string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT " -no_warning_num=11187")
+        elseif(${lang} STREQUAL "CXX")
+          string(APPEND CMAKE_${lang}_FLAGS_DEBUG_INIT " -no_warning_num=19999")
+          string(APPEND CMAKE_${lang}_FLAGS_MINSIZEREL_INIT " -no_warning_num=19999")
+          string(APPEND CMAKE_${lang}_FLAGS_RELEASE_INIT " -no_warning_num=19999")
+          string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT " -no_warning_num=19999,11187")
+        endif()
+      endif()
       set(_RENESAS_DEBUG_G_GL_GDB "-g")
       if(CMAKE_${lang}_COMPILER_VERSION VERSION_GREATER_EQUAL 1.2)
         string(APPEND _RENESAS_DEBUG_G_GL_GDB " -g_line")
@@ -374,14 +433,15 @@ macro(__compiler_renesas lang)
     else() # RL78 or RH850
       get_filename_component(_RENESAS_COMPILER_INCLUDE_PATH ${CMAKE_${lang}_COMPILER}/../../inc ABSOLUTE)
     endif()
+    # FIXME: Why CMAKE_C_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT? Why not CMAKE_C_FLAGS_INIT? I have to remember it.
     if(CMAKE_BUILD_TYPE)
       string(TOUPPER ${CMAKE_BUILD_TYPE} _RENESAS_CMAKE_BUILD_TYPE)
-    else() # If CMAKE_BUILD_TYPE wasn't defined.
+    else() # If CMAKE_BUILD_TYPE is not defined.
       set(_RENESAS_CMAKE_BUILD_TYPE "") # FIXME: Is this OK?
     endif()
     if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
       set(_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS ${RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS})
-    else() # When RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS wasn't defined.
+    else() # When RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS is not defined.
       set(_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS "")
     endif()
     if(${lang} STREQUAL "C")
@@ -451,15 +511,34 @@ macro(__compiler_renesas lang)
         endif()
       endif()
     elseif(${lang} STREQUAL "CXX")
-      # FIXME: CC-RX does not support any C++ standards.
-      if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
-        # In the case of IntelliSense,
-        # since the default language standard of windows-clang-x86 mode is C++14, something has to be specified.
-        string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " ${_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS} -I\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c++98")
-      else()
-        # In the case of clangd,
-        # since the default language standard is C++14, something has to be specified.
-        string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c++98 <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+      if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
+        # FIXME: CC-RX does not support any C++ standards.
+        if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
+          # In the case of IntelliSense,
+          # since the default language standard of windows-clang-x86 mode is C++14, something has to be specified.
+          string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " ${_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS} -I\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c++98")
+        else()
+          # In the case of clangd,
+          # since the default language standard is C++14, something has to be specified.
+          string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}\" -std=c++98 <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+        endif()
+      else() # RL78
+        if(RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS)
+          # In the case of IntelliSense,
+          # even when the default language standard of windows-clang-x86 mode is C++14 today and it is the same as CC-RL, it should be specified for the future.
+          string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " ${_RENESAS_INTELLISENSE_HELPER_EXTRA_FLAGS}")
+          string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " -I\"${_RENESAS_COMPILER_INCLUDE_PATH}/cxx/libcxx\"")
+          string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " -I\"${_RENESAS_COMPILER_INCLUDE_PATH}/cxx/ClangFront/clang/8.0.0/include\"")
+          string(APPEND CMAKE_CXX_FLAGS_${_RENESAS_CMAKE_BUILD_TYPE}_INIT " -I\"${_RENESAS_COMPILER_INCLUDE_PATH}/cxx/newlib\"")
+          string(REPLACE "<FLAGS>" "-std=c++14 <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+        else()
+          # In the case of clangd,
+          # even when the default language standard is C++14 today and it is the same as CC-RL, it should be specified for the future.
+          string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}/cxx/libcxx\" <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+          string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}/cxx/ClangFront/clang/8.0.0/include\" <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+          string(REPLACE "<FLAGS>" "-isystem\"${_RENESAS_COMPILER_INCLUDE_PATH}/cxx/newlib\" <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+          string(REPLACE "<FLAGS>" "-std=c++14 <FLAGS>" CMAKE_CXX_COMPILE_OBJECT ${CMAKE_CXX_COMPILE_OBJECT})
+        endif()
       endif()
     endif()
     unset(_RENESAS_COMPILER_INCLUDE_PATH)
@@ -477,7 +556,7 @@ macro(__compiler_renesas lang)
       set(CMAKE_DEPFILE_FLAGS_${lang} "-MM -MT=<OBJECT> -MF=<DEP_FILE>")
       string(APPEND _RENESAS_ASSEMBLER_WRAPPER "${CMAKE_${lang}_COMPILER_ARCHITECTURE_ID} ${CMAKE_${lang}_COMPILER_VERSION} <CMAKE_${lang}_COMPILER>")
       set(CMAKE_${lang}_COMPILE_OBJECT "${_RENESAS_ASSEMBLER_WRAPPER} <SOURCE> -output=<OBJECT> -nologo <DEFINES> <INCLUDES> <FLAGS>")
-      set(CMAKE_${lang}_SOURCE_FILE_EXTENSIONS src asm s)
+      set(CMAKE_${lang}_SOURCE_FILE_EXTENSIONS asm s src S SRC)
 
     elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
       #set(CMAKE_${lang}_COMPILE_OPTIONS_TARGET "-cpu=") # Not supported (at least as of today).
@@ -612,7 +691,7 @@ macro(__compiler_renesas lang)
   # Moreover debug capability is sometimes desired even if MINSIZEREL or RELEASE is selected.
   # (Please be aware that optimazation flags are different between RELEASE and RELWITHDEBINFO.)
   # DO NOT USE `-nodebug` flag of linker so that debug capability can be provided in such case
-  # by adding debug information flag(s) such as `-debug` or `-g` of compiler or assembler 
+  # by adding debug information flag(s) such as `-debug` or `-g` of compiler or assembler
   # in user's toolchain file(s) or user's CMakeLists.txt file(s).
   #string(APPEND CMAKE_EXE_LINKER_FLAGS_INIT " ")
   #string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " ") # -debug (default)
