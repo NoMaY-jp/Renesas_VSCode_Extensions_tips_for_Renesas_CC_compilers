@@ -106,6 +106,11 @@ exit
 rem Ninja
 echo\
 echo\
+if "%~1" == "rl78g23_fpb" if exist %TESTROOT%\rl78g23_fpb\src\smc_gen\Config_SMS\Config_SMS_ASM.h (
+    echo del %TESTROOT%\rl78g23_fpb\src\smc_gen\Config_SMS\Config_SMS_ASM.h
+    del %TESTROOT%\rl78g23_fpb\src\smc_gen\Config_SMS\Config_SMS_ASM.h
+    echo\
+)
 mkdir %TESTROOT%\%1\build
 set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G Ninja
 echo %CMDLINE%
@@ -193,6 +198,11 @@ if "%~5" == "p,s" (
 rem Unix Makefile
 echo\
 echo\
+if "%~1" == "rl78g23_fpb" if exist %TESTROOT%\rl78g23_fpb\src\smc_gen\Config_SMS\Config_SMS_ASM.h (
+    echo del %TESTROOT%\rl78g23_fpb\src\smc_gen\Config_SMS\Config_SMS_ASM.h
+    del %TESTROOT%\rl78g23_fpb\src\smc_gen\Config_SMS\Config_SMS_ASM.h
+    echo\
+)
 mkdir %TESTROOT%\%1\build
 set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE:FILEPATH=%TESTROOT%\%1\cmake\%2.cmake -S=%TESTROOT%\%1 -B=%TESTROOT%\%1\build -G "Unix Makefiles"
 echo %CMDLINE%

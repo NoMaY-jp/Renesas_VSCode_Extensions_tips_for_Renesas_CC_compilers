@@ -1,0 +1,59 @@
+# DISCLAIMER
+# This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
+# No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+# applicable laws, including copyright laws. 
+# THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
+# OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
+# LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
+# INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
+# ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+# Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
+# of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+# following link:
+# http://www.renesas.com/disclaimer
+#
+# Copyright (C) 2020 Renesas Electronics Corporation. All rights reserved.
+
+# File Name    : Config_SMS_ASM.smsasm
+# Version      : 1.0.0.0
+# Device(s)    : R7F100GLGxFB
+# Description  : This file implements device driver for Config_SMS.
+# Creation Date: 2021-05-25
+
+.psection ; Initial value part of SMS general register (C source part for RL78)
+#if !defined(SC_SMSASM)
+#define SC_SMSASM
+
+#define sms_greg1_initializer\
+    0x0000,    /* SMSG0 */\
+    0x0000,    /* SMSG1 */\
+    0x0000,    /* SMSG2 */\
+    0x0000,    /* SMSG3 */\
+    (unsigned short)&ITLS0,    /* SMSG4 */\
+    (unsigned short)&SMSG1,    /* SMSG5 */\
+    (unsigned short)&TDR01,    /* SMSG6 */\
+    2,    /* SMSG7 */\
+    0x0000,    /* SMSG8 */\
+    0x0000,    /* SMSG9 */\
+    0x0000,    /* SMSG10 */\
+    0x0000,    /* SMSG11 */\
+    0x0000,    /* SMSG12 */\
+    0x0000,    /* SMSG13 */\
+    0x0000,    /* SMSG14 */\
+    0xFFFF    /* SMSG15 */
+
+.section sms_program1
+    MOV [SMSG4+0], SMSG0
+    MOVW SMSG8, [SMSG1+0]
+    MOVW [SMSG6+0], SMSG8
+    ADDW SMSG1, SMSG7
+    CMPW SMSG1, SMSG2
+    BC $__cmpbranch_finish
+__cmpbranch_no:
+    MOVW [SMSG5+0], SMSG3
+__cmpbranch_finish:
+    FINISH
+
+.psection ; End of file (C source part for RL78)
+#endif /* SC_SMSASM */
