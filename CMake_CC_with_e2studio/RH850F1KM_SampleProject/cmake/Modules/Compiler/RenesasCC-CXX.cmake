@@ -5,7 +5,7 @@
 #    it does not support any C++ standards.
 #  - In the case of CC-RL, C++ Language Specification is compatible with C++14.
 #
-include(Compiler/RENESAS)
+include(Compiler/RenesasCC)
 
 ### This file is processed when the IAR C++ Compiler is used
 ###

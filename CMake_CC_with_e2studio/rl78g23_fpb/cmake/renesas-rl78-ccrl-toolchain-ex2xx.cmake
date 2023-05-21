@@ -1,12 +1,5 @@
-set(CMAKE_SYSTEM_NAME Generic) # Tell CMake that this toolchain file is to be used for cross-compiling.
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Modules") # Tell CMake the path of support module for Renesas CC compilers.
-if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
-  set(CMAKE_CXX_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
-  set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
-  set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
-  set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-endif()
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
+set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
 set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RL/V1.12.00/bin) # Quote the path with "..." if it includes space.

@@ -93,7 +93,7 @@ if(CMAKE_C_COMPILER_ARCHITECTURE_ID MATCHES "^(RX|RL78)$" OR CMAKE_CXX_COMPILER_
   endfunction()
 
   # The following code is necessary after re-configuration without compiler search.
-  # In that case, Modules/Compiler/RENESAS-FindBinUtils.cmake is not used.
+  # In that case, Modules/Compiler/RenesasCC-FindBinUtils.cmake is not used.
   #__compiler_renesas_debug_disp_var(CMAKE_C_FLAGS)
   #__compiler_renesas_debug_disp_var(CMAKE_CXX_FLAGS)
   if(CMAKE_C_COMPILER AND CMAKE_CXX_COMPILER)
@@ -283,11 +283,11 @@ macro(__compiler_renesas lang)
   endif()
 
   # CMAKE_MODULE_PATH hooks for Renesas compiler/assembler/linker/etc wrapper scripts.
-  find_file(_RENESAS_COMPILER_WRAPPER   Compiler/RENESAS-CompilerWrapper.cmake     PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-  find_file(_RENESAS_ASSEMBLER_WRAPPER  Compiler/RENESAS-AssemblerWrapper.cmake    PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-  find_file(_RENESAS_LINKER_WRAPPER     Compiler/RENESAS-LinkerWrapper.cmake       PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-  find_file(_RENESAS_LIBGEN_WRAPPER     Compiler/RENESAS-LibGeneratorWrapper.cmake PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-  find_file(_RENESAS_XCONVERTER_WRAPPER Compiler/RENESAS-XConverterWrapper.cmake   PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  find_file(_RENESAS_COMPILER_WRAPPER   Compiler/RenesasCC-CompilerWrapper.cmake     PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  find_file(_RENESAS_ASSEMBLER_WRAPPER  Compiler/RenesasCC-AssemblerWrapper.cmake    PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  find_file(_RENESAS_LINKER_WRAPPER     Compiler/RenesasCC-LinkerWrapper.cmake       PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  find_file(_RENESAS_LIBGEN_WRAPPER     Compiler/RenesasCC-LibGeneratorWrapper.cmake PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  find_file(_RENESAS_XCONVERTER_WRAPPER Compiler/RenesasCC-XConverterWrapper.cmake   PATHS ${CMAKE_MODULE_PATH} ${CMAKE_ROOT}/Modules REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
   set(_RENESAS_COMPILER_WRAPPER   "<CMAKE_COMMAND> -P \"${_RENESAS_COMPILER_WRAPPER}\" ")
   set(_RENESAS_ASSEMBLER_WRAPPER  "<CMAKE_COMMAND> -P \"${_RENESAS_ASSEMBLER_WRAPPER}\" ")
   set(_RENESAS_LINKER_WRAPPER     "<CMAKE_COMMAND> -P \"${_RENESAS_LINKER_WRAPPER}\" ")

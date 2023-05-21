@@ -111,14 +111,14 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xIAR$")
 ##  unset(_CMAKE_IAR_ITOOLS)
 ##  unset(_CMAKE_IAR_XTOOLS)
 
-elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRENESAS$")
-  # Small helper declaring RENESAS tools (e.g. libgen, linker, etc) to avoid repeating the same idiom every time
+elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRenesasCC$")
+  # Small helper declaring Renesas tools (e.g. libgen, linker, etc) to avoid repeating the same idiom every time
   macro(__append_RENESAS_tool TOOL_VAR NAME)
     set(_CMAKE_${TOOL_VAR}_NAMES "${NAME}" "${NAME}.exe")
     list(APPEND _CMAKE_TOOL_VARS ${TOOL_VAR})
   endmacro()
 
-  # Resolve hint path from an RENESAS compiler
+  # Resolve hint path from an Renesas CC compiler
   function(__resolve_RENESAS_hints COMPILER RESULT)
     get_filename_component(_CMAKE_RENESAS_HINT "${COMPILER}" REALPATH)
     get_filename_component(_CMAKE_RENESAS_HINT "${_CMAKE_RENESAS_HINT}" DIRECTORY)
@@ -137,7 +137,7 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRENESAS$
 
   __resolve_RENESAS_hints("${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER}" _CMAKE_TOOLCHAIN_LOCATION)
 
-  # FIXME: Is this usefull? (This is moved from RENESAS.cmake.)
+  # FIXME: Is this usefull? (This is moved from RenesasCC.cmake.)
   macro(__compiler_set_path_renesas lang c_compiler cxx_compiler asm_compiler linker)
     #if((NOT CMAKE_CXX_COMPILER) AND (NOT "x${cxx_compiler}" STREQUAL "x"))
     #  set(CMAKE_CXX_COMPILER ${_CMAKE_TOOLCHAIN_LOCATION}/${cxx_compiler})
@@ -156,7 +156,7 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRENESAS$
     message("DEBUG: LINKER = ${CMAKE_LINKER}")
   endmacro()
 
-  # FIXME: Is this usefull? (This is moved from RENESAS.cmake.)
+  # FIXME: Is this usefull? (This is moved from RenesasCC.cmake.)
   #if(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RX")
   #  __compiler_set_path_renesas(${lang} ccrx ccrx asrx rlink)
   #elseif(CMAKE_${lang}_COMPILER_ARCHITECTURE_ID STREQUAL "RL78")
@@ -166,9 +166,9 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRENESAS$
   #endif()
 
   # Workaround for the following C and CXX settings
-  # set(CMAKE_C_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
+  # set(CMAKE_C_COMPILER_ID RenesasCC) # Tell CMake that the target compiler is one of Renesas CC compilers.
   # set(CMAKE_C_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
-  # set(CMAKE_CXX_COMPILER_ID RENESAS) # Tell CMake that the target compiler is one of Renesas CC compilers.
+  # set(CMAKE_CXX_COMPILER_ID RenesasCC) # Tell CMake that the target compiler is one of Renesas CC compilers.
   # set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # Tell CMake that the compiler detection process must be eliminated.
   if("x${_CMAKE_PROCESSING_LANGUAGE}" MATCHES "(xC|xCXX)")
 
@@ -220,25 +220,25 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRENESAS$
 
       # Just for convenience.
       if("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ARCHITECTURE_ID}" STREQUAL "xRX")
-        set(CMAKE_C_COMPILER_ID RENESAS)
+        set(CMAKE_C_COMPILER_ID RenesasCC)
         set(CMAKE_C_COMPILER_ID_RUN TRUE)
-        set(CMAKE_CXX_COMPILER_ID RENESAS)
+        set(CMAKE_CXX_COMPILER_ID RenesasCC)
         set(CMAKE_CXX_COMPILER_ID_RUN TRUE)
-        set(CMAKE_ASM_COMPILER_ID RENESAS)
+        set(CMAKE_ASM_COMPILER_ID RenesasCC)
 
       elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ARCHITECTURE_ID}" STREQUAL "xRL78")
-        set(CMAKE_C_COMPILER_ID RENESAS)
+        set(CMAKE_C_COMPILER_ID RenesasCC)
         set(CMAKE_C_COMPILER_ID_RUN TRUE)
-        set(CMAKE_CXX_COMPILER_ID RENESAS)
+        set(CMAKE_CXX_COMPILER_ID RenesasCC)
         set(CMAKE_CXX_COMPILER_ID_RUN TRUE)
-        set(CMAKE_ASM_COMPILER_ID RENESAS)
+        set(CMAKE_ASM_COMPILER_ID RenesasCC)
 
       elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ARCHITECTURE_ID}" STREQUAL "xRH850")
-        set(CMAKE_C_COMPILER_ID RENESAS)
+        set(CMAKE_C_COMPILER_ID RenesasCC)
         set(CMAKE_C_COMPILER_ID_RUN TRUE)
-        #set(CMAKE_CXX_COMPILER_ID RENESAS)  # CC-RH does not support C++ as of todyay.
+        #set(CMAKE_CXX_COMPILER_ID RenesasCC)  # CC-RH does not support C++ as of todyay.
         #set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # CC-RH does not support C++ as of todyay.
-        set(CMAKE_ASM_COMPILER_ID RENESAS)
+        set(CMAKE_ASM_COMPILER_ID RenesasCC)
       endif()
 
       # The compiler detection process is skipped but we must define the followings.

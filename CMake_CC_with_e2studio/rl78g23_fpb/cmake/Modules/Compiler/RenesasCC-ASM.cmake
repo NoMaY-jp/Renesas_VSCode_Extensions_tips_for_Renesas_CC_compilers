@@ -1,6 +1,6 @@
 # This file is processed when the Renesas Assembler is used
 #
-include(Compiler/Renesas)
+include(Compiler/RenesasCC)
 
 ### This file is processed when the IAR Assembler is used
 ##

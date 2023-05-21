@@ -1,6 +1,6 @@
 # This file is processed when the Renesas C Compiler is used
 #
-include(Compiler/RENESAS)
+include(Compiler/RenesasCC)
 
 ### This file is processed when the IAR C Compiler is used
 ###
