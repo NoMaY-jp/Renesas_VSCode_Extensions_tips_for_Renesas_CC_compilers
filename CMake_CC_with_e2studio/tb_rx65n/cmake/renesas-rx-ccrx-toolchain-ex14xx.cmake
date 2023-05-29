@@ -1,64 +1,75 @@
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
 set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
+set(CMAKE_SYSTEM_PROCESSOR RX)
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
-set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RX/V3.05.00/bin) # Quote the path with "..." if it includes space.
-set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_733684649/Utilities/ccrx) # Quote the path with "..." if it includes space.  # For e2 studio.
+set(TOOLCHAIN_ROOT C:/Renesas/CS+/CC/CC-RX/V3.05.00) # Quote the path with "..." if it includes space.
+set(EXTERNAL_TOOLCHAIN_ROOT C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_733684649/Utilities) # Quote the path with "..." if it includes space.  # For e2 studio.
+set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_ROOT} ${EXTERNAL_TOOLCHAIN_ROOT}) # In the case of CS+, ${EXTERNAL_TOOLCHAIN_ROOT} isn't necessary.
 
-if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
-  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}/ccrx.exe)
-elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
-  set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrx.exe)
-endif()
-set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
+set(CMAKE_C_STANDARD 99) # Tell the support module for Renesas CC compilers about the language standard for initial setting.
 
-#########
-# FLAGS #
-#########
+############################
+macro(SET_DIRECTORY_OPTIONS)
+############################
 
 set(CMAKE_C_STANDARD 99)
 #set(CMAKE_C_STANDARD_REQUIRED ON) # CMake's default is OFF.
 #set(CMAKE_C_EXTENSIONS OFF) # CC-RX/RL/RH's default is ON and CC-RX has no strict standard option.
 
-#set(CMAKE_EXECUTABLE_SUFFIX ".elf") # FIXME: This doesn't work.
+set(CMAKE_EXECUTABLE_SUFFIX ".elf") # TODO: Not only using XConverter but also not using it.
 
-if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
-  set(CMAKE_CXX_FLAGS "-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lang=ecpp") # -lang=cpp and/or -exception and/or -rtti=on
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -listfile=.")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -debug -g_line") # This line is intended for test purpose.
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no_warning=20826 -preinclude=${CMAKE_CURRENT_LIST_DIR}/../src/pre_include.h") # This line is intended for test purpose.
-else()
-  set(CMAKE_C_FLAGS   "-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033")
-  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -listfile=.")
-  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -debug -g_line") # This line is intended for test purpose.
-  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -no_warning=20826 -preinclude=${CMAKE_CURRENT_LIST_DIR}/../src/pre_include.h") # This line is intended for test purpose.
-endif()
-set(CMAKE_ASM_FLAGS "-isa=rxv2 -goptimize -utf8")
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -listfile=. -define=aaa,bbb=999,ccc,ddd=\"qqq\",eee") # Somehow not `"qqq"` but `qqq` is passed to the assembler.
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -debug") # This line is intended for test purpose.
+add_compile_options( # `SHELL` notation may help to use space-separated flags in the generator expression.
+"SHELL:$<$<COMPILE_LANGUAGE:C,CXX>:-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033>"
+"SHELL:$<$<COMPILE_LANGUAGE:ASM>:-isa=rxv2 -goptimize -utf8>"
+"SHELL:$<$<COMPILE_LANGUAGE:CXX>:-lang=ecpp>" # -lang=cpp and/or -exception and/or -rtti=on
+"SHELL:$<$<COMPILE_LANGUAGE:C,CXX>:-listfile=.>"
+"SHELL:$<$<COMPILE_LANGUAGE:ASM>:-listfile=. -define=aaa,bbb=999,ccc,ddd=\"qqq\",eee>" # Somehow not `"qqq"` but `qqq` is passed to the assembler.
+"SHELL:$<$<COMPILE_LANGUAGE:C,CXX>:-debug -g_line>" # This line is intended for test purpose.
+"SHELL:$<$<COMPILE_LANGUAGE:ASM>:-debug>" # This line is intended for test purpose.
+)
 
-if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
-  set(CMAKE_LBG_FLAGS "${CMAKE_CXX_FLAGS}") #-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype")
-else()
-  set(CMAKE_LBG_FLAGS "${CMAKE_C_FLAGS}")   #-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype")
-endif()
+add_library_generate_options(
+-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033
+-debug -g_line # This line is intended for test purpose.
+-no_warning=20826 -preinclude=${CMAKE_CURRENT_LIST_DIR}/src/pre_include.h # This line is intended for test purpose.
+)
+add_library_generate_options( # Dividing the command is intended for test purpos.
+#-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype
+)
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 
-set(CMAKE_EXE_LINKER_FLAGS "-optimize=short_format,branch,symbol_delete -stack \
--start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,P,C_1,C_2,C,C$$*,D*,W*,L/0FFE00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC \
--rom=D=R,D_1=R_1,D_2=R_2 \
--vect=_undefined_interrupt_source_isr \
--change_message=warning=2300,2142 -total_size -list -show=all \
--form=s -byte_count=20 -xcopt=-dsp_section=DSP \
--debug") # This line is intended for test purpose.
-# If you want to use `C$*` string for `-start` flag, please take care of `$` character as above.
-# Fortunately, in the case of Ninja, simple single `$` still can be used for `-start` flag.
+add_link_options(
+-optimize=short_format,branch,symbol_delete -stack
+-start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,P,C_1,C_2,C,C$*,D*,W*,L/0FFE00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC
+-rom=D=R,D_1=R_1,D_2=R_2
+-vect=_undefined_interrupt_source_isr
+#-change_message=warning=2300,2142 -total_size -list -show=all # See next two lines.
+LINKER:SHELL:-change_message=warning=2300,2142 # This style is intended for test purpos only.
+LINKER:-total_size,-list,-show=all # This style is intended for test purpos only.
+-form=s -byte_count=20 -xcopt=-dsp_section=DSP
+-debug) # This line is intended for test purpose.
 
-#######
-# END #
-#######
+# The following setting selects the output type of compilation of the source.
+if(NOT DEFINED EXAMPLE_ALT_OUTPUT_TYPE)
+  set(EXAMPLE_ALT_OUTPUT_TYPE 0) # 0: Usual object or 1: Preprocessed source or 2: Assembly source.
+endif()
+if(EXAMPLE_ALT_OUTPUT_TYPE EQUAL 1)
+  set_property(SOURCE ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
+  APPEND PROPERTY COMPILE_OPTIONS
+  -output=prep=test_dep_scan_etc_c.p
+  )
+elseif(EXAMPLE_ALT_OUTPUT_TYPE EQUAL 2)
+  set_property(SOURCE ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
+  APPEND PROPERTY COMPILE_OPTIONS
+  -output=src=test_dep_scan_etc_c.s
+  )
+endif()
+
+##########
+endmacro()
+##########
 
 #------------------------------------------
 # Note: Renesas specific flags and commands

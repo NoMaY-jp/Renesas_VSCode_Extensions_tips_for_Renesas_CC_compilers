@@ -7,6 +7,7 @@ if "%1" == "" (
 
 set CMAKE=C:\Program Files\CMake\bin\cmake.exe
 set TESTROOT=%~dpf1%
+set TESTRESULT=%~dpf1%\testall\with_dbg_rspf
 for /f "usebackq" %%t in (`time /t`) do set TESTSTARTTIME=%%t
 
 echo\
@@ -44,31 +45,31 @@ rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolch
 call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5
 call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex6
 
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex1   abs mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex1   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex2   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex2xx x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex3   abs mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex3   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4xx elf mot
-call :run tb_rx65n renesas-rx-ccrx-toolchain-ex5   abs mot
+call :run tb_rx65n renesas-rx-ccrx-toolchain-ex5   x mot
 call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6   x mot
 call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6xx elf mot
 
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex1   abs mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex1   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2xx x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex3   abs mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex3   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4xx elf mot
-call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5   abs mot
+call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5   x mot
 call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6   x mot "p,s"
 call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx elf mot
 
-rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex1 abs mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex1 x mot
 rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex2 x mot
-rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex3 abs mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex3 x mot
 rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex4 x mot
-call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5 abs mot
+call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5 x mot
 call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex6 x mot "p,s"
 
 :pass
@@ -117,7 +118,7 @@ echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     goto :fail
 )
 set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --target all --
@@ -125,23 +126,23 @@ echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%3" (
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     echo\
     echo ERROR: The following file does not exist.
-    echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja\%1.%3
+    echo %TESTRESULT%\build_%1_%2_Ninja\%1.%3
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%4" (
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     echo\
     echo ERROR: The following file does not exist.
-    echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja\%1.%4
+    echo %TESTRESULT%\build_%1_%2_Ninja\%1.%4
     goto :fail
 )
 if not "%~5" == "p,s" goto Ninja_skip_p_s
@@ -153,15 +154,15 @@ if not "%~5" == "p,s" goto Ninja_skip_p_s
     %CMDLINE%
     if errorlevel 1 (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.p" (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         echo\
         echo ERROR: The following file does not exist.
-        echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2__Ninja\test_dep_scan_etc_c.p
+        echo %TESTRESULT%\build_%1_%2__Ninja\test_dep_scan_etc_c.p
         goto :fail
     )
 
@@ -173,20 +174,20 @@ if not "%~5" == "p,s" goto Ninja_skip_p_s
     %CMDLINE%
     if errorlevel 1 (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.s" (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         echo\
         echo ERROR: The following file does not exist.
-        echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2__Ninja\test_dep_scan_etc_c.s
+        echo %TESTRESULT%\build_%1_%2__Ninja\test_dep_scan_etc_c.s
         goto :fail
     )
 :Ninja_skip_p_s
 choice /t 3 /d y>nul
-move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja>nul
+move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
 echo\
 echo PASS: %1.%3 is successfully built.
 echo PASS: %1.%4 is successfully built.
@@ -209,7 +210,7 @@ echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     goto :fail
 )
 set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --target all --
@@ -217,23 +218,23 @@ echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%3" (
     echo\
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     echo ERROR: The following file does not exist.
-    echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile\%1.%3
+    echo %TESTRESULT%\build_%1_%2_UnixMakefile\%1.%3
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%4" (
     echo\
     choice /t 3 /d y>nul
-    move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+    move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     echo ERROR: The following file does not exist.
-    echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile\%1.%4
+    echo %TESTRESULT%\build_%1_%2_UnixMakefile\%1.%4
     goto :fail
 )
 if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
@@ -245,15 +246,15 @@ if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
     %CMDLINE%
     if errorlevel 1 (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.p" (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         echo\
         echo ERROR: The following file does not exist.
-        echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile\test_dep_scan_etc_c.p
+        echo %TESTRESULT%\build_%1_%2_UnixMakefile\test_dep_scan_etc_c.p
         goto :fail
     )
 
@@ -265,20 +266,20 @@ if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
     %CMDLINE%
     if errorlevel 1 (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.s" (
         choice /t 3 /d y>nul
-        move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+        move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         echo\
         echo ERROR: The following file does not exist.
-        echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile\test_dep_scan_etc_c.s
+        echo %TESTRESULT%\build_%1_%2_UnixMakefile\test_dep_scan_etc_c.s
         goto :fail
     )
 :UnixMakefile_skip_p_s
 choice /t 3 /d y>nul
-move %TESTROOT%\%1\build %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile>nul
+move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
 echo\
 echo PASS: %1.%3 is successfully built.
 echo PASS: %1.%4 is successfully built.
@@ -300,15 +301,15 @@ goto :EOF
 :testall_folder_check
 
 rem Ninja
-if not exist "%TESTROOT%\testall\with_dbg_rspf" mkdir "%TESTROOT%\testall\with_dbg_rspf"
-if exist "%TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja" echo ERROR: The following folder already exists:
-if exist "%TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja" echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja
-if exist "%TESTROOT%\testall\with_dbg_rspf\build_%1_%2_Ninja" exit
+if not exist "%TESTRESULT%" mkdir "%TESTRESULT%"
+if exist "%TESTRESULT%\build_%1_%2_Ninja" echo ERROR: The following folder already exists:
+if exist "%TESTRESULT%\build_%1_%2_Ninja" echo %TESTRESULT%\build_%1_%2_Ninja
+if exist "%TESTRESULT%\build_%1_%2_Ninja" exit
 
 rem Unix Makefile
-if not exist "%TESTROOT%\testall\with_dbg_rspf" mkdir "%TESTROOT%\testall\with_dbg_rspf"
-if exist "%TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile" echo ERROR: The following folder already exists:
-if exist "%TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile" echo %TESTROOT%\testall\with_dbg_rspf\build_%1_%2_UnixMakefile
+if not exist "%TESTRESULT%" mkdir "%TESTRESULT%"
+if exist "%TESTRESULT%\build_%1_%2_UnixMakefile" echo ERROR: The following folder already exists:
+if exist "%TESTRESULT%\build_%1_%2_UnixMakefile" echo %TESTRESULT%\build_%1_%2_UnixMakefile
 if exist "%TESTROOT%testall\\%1_%2_UnixMakefile" exit
 
 goto :EOF

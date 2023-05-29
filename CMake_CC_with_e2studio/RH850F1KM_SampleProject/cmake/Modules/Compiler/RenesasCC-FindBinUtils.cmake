@@ -1,6 +1,6 @@
 # This file is included as following.
 #
-# Modules/CMakeDetermineCCompiler.cmake#
+# Modules/CMakeDetermineCCompiler.cmake
 #
 #   set(_CMAKE_PROCESSING_LANGUAGE "C")
 #   include(CMakeFindBinUtils)
@@ -118,7 +118,7 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRenesasC
     list(APPEND _CMAKE_TOOL_VARS ${TOOL_VAR})
   endmacro()
 
-  # Resolve hint path from an Renesas CC compiler
+  # Resolve hint path from a Renesas CC compiler
   function(__resolve_RENESAS_hints COMPILER RESULT)
     get_filename_component(_CMAKE_RENESAS_HINT "${COMPILER}" REALPATH)
     get_filename_component(_CMAKE_RENESAS_HINT "${_CMAKE_RENESAS_HINT}" DIRECTORY)
@@ -127,10 +127,11 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRenesasC
     get_filename_component(_CMAKE_RENESAS_HINT "${COMPILER}" DIRECTORY)
     list(APPEND _RENESAS_HINTS "${_CMAKE_RENESAS_HINT}")
 
-#### FIXME: I forget what is this.
-####    find_program(_CMAKE_RENESAS_XCONVERTER NAMES "renesas_cc_converter" "renesas_cc_converter.exe")
-####    get_filename_component(_CMAKE_RENESAS_XCONVERTER_HINT "${_CMAKE_RENESAS_XCONVERTER}" DIRECTORY)
-####    list(APPEND _RENESAS_HINTS "${_CMAKE_RENESAS_XCONVERTER_HINT}")
+    # Renesas X Converter is not in the hint path of Renesas CC compiler. It has to be taken care of.
+    # FIXME: Why hint path is necessary for X Converter? Not only for it but also for compiler?
+    find_program(_CMAKE_RENESAS_XCONVERTER NAMES "renesas_cc_converter" "renesas_cc_converter.exe")
+    get_filename_component(_CMAKE_RENESAS_XCONVERTER_HINT "${_CMAKE_RENESAS_XCONVERTER}" DIRECTORY)
+    list(APPEND _RENESAS_HINTS "${_CMAKE_RENESAS_XCONVERTER_HINT}")
 
     set(${RESULT} "${_RENESAS_HINTS}" PARENT_SCOPE)
   endfunction()
@@ -236,8 +237,8 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRenesasC
       elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ARCHITECTURE_ID}" STREQUAL "xRH850")
         set(CMAKE_C_COMPILER_ID RenesasCC)
         set(CMAKE_C_COMPILER_ID_RUN TRUE)
-        #set(CMAKE_CXX_COMPILER_ID RenesasCC)  # CC-RH does not support C++ as of todyay.
-        #set(CMAKE_CXX_COMPILER_ID_RUN TRUE) # CC-RH does not support C++ as of todyay.
+        #set(CMAKE_CXX_COMPILER_ID RenesasCC) # CC-RH does not support C++ as of todyay.
+        #set(CMAKE_CXX_COMPILER_ID_RUN TRUE)  # CC-RH does not support C++ as of todyay.
         set(CMAKE_ASM_COMPILER_ID RenesasCC)
       endif()
 
@@ -264,16 +265,16 @@ elseif("x${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}" MATCHES "^xRenesasC
         if(_CMAKE_PROCESSING_LANGUAGE STREQUAL C)
           set(CMAKE_C_STANDARD_COMPUTED_DEFAULT 90)
         #elseif(_CMAKE_PROCESSING_LANGUAGE STREQUAL CXX) # CC-RH does not support C++ as of todyay.
-        #  set(CMAKE_CXX_STANDARD_COMPUTED_DEFAULT 14)   # CC-RH does not support C++ as of todyay.
+        #  set(CMAKE_CXX_STANDARD_COMPUTED_DEFAULT 14)
         endif()
       endif()
 
       # Fallback CMAKE_LINKER to `rlink` if it is the canonical name `ld` or empty.
       if((NOT CMAKE_LINKER) OR ${CMAKE_LINKER} MATCHES "^(.*/)?ld(\\.exe)?$")
         if(${CMAKE_${_CMAKE_PROCESSING_LANGUAGE}_COMPILER} MATCHES "^(.*/)?[^/]*(\\.exe)?$")
-        unset(CMAKE_LINKER CACHE)
-        unset(CMAKE_LINKER)
-        __append_RENESAS_tool(LINKER rlink)
+          unset(CMAKE_LINKER CACHE)
+          unset(CMAKE_LINKER)
+          __append_RENESAS_tool(LINKER rlink)
         endif()
       endif()
 

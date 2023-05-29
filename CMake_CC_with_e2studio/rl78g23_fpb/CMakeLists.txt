@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR) # 3.26.0-rc2 or later
 
-if(CMAKE_TOOLCHAIN_FILE MATCHES ".*(ex2xx|ex4xx|ex6xx)\\.cmake" AND NOT EXAMPLE_CXX_PROJ_TYPE)
+if(CMAKE_TOOLCHAIN_FILE MATCHES "xx\\.cmake$" AND NOT EXAMPLE_CXX_PROJ_TYPE)
     # The following setting is to test the language definition order issue in project() (or enable_language()).
     set(EXAMPLE_CXX_PROJ_TYPE 1) # 1: The order is `CXX C`. or 2: The order is `C CXX`.
 endif()
 
-if(CMAKE_TOOLCHAIN_FILE MATCHES ".*/cross\\.cmake$")
+if(CMAKE_TOOLCHAIN_FILE MATCHES "cross\\.cmake$")
 
     # The following setting can be set to 1 or 2 for CXX project example.
     #set(EXAMPLE_CXX_PROJ_TYPE 1) # Not defined: Not CXX project. or 1: The order is `CXX C`. or 2: The order is `C CXX`.
@@ -137,6 +137,9 @@ if(EXISTS ${GSG_BASE_DIR}/src/smc_gen/Config_SMS/Config_SMS_ASM.smsasm)
     target_sources(${PROJECT_NAME}
         PRIVATE ${GSG_BASE_DIR}/src/smc_gen/Config_SMS/Config_SMS_ASM.h
     )
+    if(TOOLCHAIN_ROOT AND NOT TOOLCHAIN_PATH)
+        set(TOOLCHAIN_PATH ${TOOLCHAIN_ROOT}/bin)
+    endif()
     add_custom_command(
         COMMAND ${TOOLCHAIN_PATH}/../../../../../SMS/bin/smsasm # The path is for the CS+ standard install.
                 ${GSG_BASE_DIR}/src/smc_gen/Config_SMS/Config_SMS_ASM.smsasm
