@@ -1,13 +1,12 @@
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
 set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
 set(CMAKE_SYSTEM_PROCESSOR RH850)
+set(CMAKE_SYSTEM_ARCH G3KH)
 
 # You can set the tool paths here in stead of setting the environment variable `Path` on Windows.
 set(TOOLCHAIN_ROOT C:/Renesas/CS+/CC/CC-RH/V2.05.00) # Quote the path with "..." if it includes space.
 set(EXTERNAL_TOOLCHAIN_ROOT C:/Renesas/e2studio64_v202301/eclipse/plugins/com.renesas.ide.supportfiles.rh850.ccrh.build.win32.x86_64_1.0.0.v20220616-0824) # Quote the path with "..." if it includes space.  # For e2 studio.
 set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_ROOT} ${EXTERNAL_TOOLCHAIN_ROOT}) # In the case of CS+, ${EXTERNAL_TOOLCHAIN_ROOT} isn't necessary.
-
-set(CMAKE_C_COMPILER ccrh -Xcpu=g3kh)
 
 set(CMAKE_C_STANDARD 99) # Tell the support module for Renesas CC compilers about the language standard for initial setting.
 

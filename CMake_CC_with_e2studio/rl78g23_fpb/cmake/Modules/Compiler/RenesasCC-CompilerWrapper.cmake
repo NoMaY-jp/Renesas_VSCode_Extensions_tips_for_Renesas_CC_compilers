@@ -148,26 +148,32 @@ foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
 endforeach()
 
 # In some cases, there are no target option during CMake's compiler check process.
-if(NOT target_opt)
-  if(arc STREQUAL RX)
+# Also Japanese characters cannot be displayed correctly in the process.
+if(arc STREQUAL RX)
+  if(NOT target_opt)
     set(try_compile_compiler_target_arg -isa=rxv1)
-  elseif(arc STREQUAL RL78)
+  endif()
+  set(try_compile_compiler_msg_lang) # CC-RX does not display any Japanese characters.
+elseif(arc STREQUAL RL78)
+  if(NOT target_opt)
     set(try_compile_compiler_target_arg -cpu=S2)
-    set(try_compile_compiler_msg_lang -msg_lang=english) # Japanese characters cannot be displayed correctly in the process.
-  elseif(arc STREQUAL RH850)
-    set(try_compile_compiler_target_arg -Xcommon=rh850) # CC-RX V1.00 and V1.01 need this option.
-    set(try_compile_compiler_msg_lang -Xmsg_lang=english) # Japanese characters cannot be displayed correctly in the process.
   endif()
-  if(src_name MATCHES "CMakeScratch(/|\\\\)[^/\\\\]+(/|\\\\)test(C|CXX)Compiler\\.(c|cxx|cpp)$")
-    list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})
-    #message("DEBUG: src_name = ${src_name}")
-  elseif(src_name MATCHES "Modules(/|\\\\)(CMake(C|CXX)CompilerABI\\.(c|cxx|cpp))$")
-    list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})
-    #message("DEBUG: src_name = ${src_name}")
-  elseif(src_name MATCHES "CMakeScratch(/|\\\\)[^/\\\\]+(/|\\\\)feature_tests\\.(c|cxx|cpp)$")
-    list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})
-    #message("DEBUG: src_name = ${src_name}")
+  set(try_compile_compiler_msg_lang -msg_lang=english) 
+elseif(arc STREQUAL RH850)
+  if(NOT target_opt)
+    set(try_compile_compiler_target_arg -Xcommon=rh850) # CC-RH V1.00 and V1.01 need this option.
   endif()
+  set(try_compile_compiler_msg_lang -Xmsg_lang=english)
+endif()
+if(src_name MATCHES "CMakeScratch(/|\\\\)[^/\\\\]+(/|\\\\)test(C|CXX)Compiler\\.(c|cxx|cpp)$")
+  list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})
+  #message("DEBUG: src_name = ${src_name}")
+elseif(src_name MATCHES "Modules(/|\\\\)(CMake(C|CXX)CompilerABI\\.(c|cxx|cpp))$")
+  list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})
+  #message("DEBUG: src_name = ${src_name}")
+elseif(src_name MATCHES "CMakeScratch(/|\\\\)[^/\\\\]+(/|\\\\)feature_tests\\.(c|cxx|cpp)$")
+  list(PREPEND cmd_args_list ${try_compile_compiler_target_arg} ${try_compile_compiler_msg_lang})
+  #message("DEBUG: src_name = ${src_name}")
 endif()
 
 list(REMOVE_ITEM cmd_args_list " ")
