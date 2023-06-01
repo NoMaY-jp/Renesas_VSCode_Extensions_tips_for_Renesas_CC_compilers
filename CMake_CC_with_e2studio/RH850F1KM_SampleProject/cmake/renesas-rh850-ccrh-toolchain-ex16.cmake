@@ -38,7 +38,7 @@ $<$<COMPILE_LANGUAGE:C>:-Xasm_option=-Xprn_path=. -Xcref=.>
 
 target_link_options(RH850F1KM_SampleProject PRIVATE
 -optimize=symbol_delete -entry=__cstart -stack
--library=v850e3v5/rhf8n.lib,v850e3v5/libmalloc.lib
+-library=rhf8n.lib,libmalloc.lib
 -start=RESET/0,EIINTTBL.const/00000200,.const,.INIT_DSEC.const,.INIT_BSEC.const,.text,.data/00008000,.data.R,.bss,.stack.bss/FEDE8000
 -rom=.data=.data.R
 -change_message=warning=2300,2142 -change_message=information=1321,1110 -total_size -list -show=all
@@ -89,7 +89,8 @@ endmacro()
 # -crc=<sub_option>
 # -output=<sub_option>
 
-# If `-library=` is specified with relative paths, both of the following folders are also searched.
+# If `-library=` is specified with relative paths, the following folders are also searched.
+# <compiler path>/lib/v850e3v5
 # <compiler path>/lib
 # <compiler path>
 
