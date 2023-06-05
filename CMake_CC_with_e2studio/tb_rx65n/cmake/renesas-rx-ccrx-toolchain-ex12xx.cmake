@@ -34,10 +34,11 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -listfile=. -define=aaa,bbb=999,ccc,ddd=
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -debug") # This line is intended for test purpose.
 
 if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
-  set(CMAKE_LBG_FLAGS "${CMAKE_CXX_FLAGS}") #-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype")
+  set(CMAKE_LBG_FLAGS "${CMAKE_CXX_FLAGS}")
 else()
-  set(CMAKE_LBG_FLAGS "${CMAKE_C_FLAGS}")   #-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype")
+  set(CMAKE_LBG_FLAGS "${CMAKE_C_FLAGS}")
 endif()
+set(CMAKE_LBG_FLAGS "${CMAKE_LBG_FLAGS} -head=runtime,stdio,stdlib,string") # -head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 

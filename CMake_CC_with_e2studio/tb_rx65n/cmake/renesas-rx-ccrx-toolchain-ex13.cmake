@@ -16,9 +16,9 @@ macro(SET_DIRECTORY_OPTIONS)
 
 set(CMAKE_C_STANDARD 99)
 
-#add_library_generate_options(
-#-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
-#)
+add_library_generate_options(
+-head=runtime,stdio,stdlib,string # -head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
+)
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 

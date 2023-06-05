@@ -14,7 +14,7 @@ set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_ROOT} ${EXTERNAL_TOOLCHAIN_ROOT}) # In the 
 
 set(CMAKE_C_STANDARD 99)
 
-#set(CMAKE_LBG_FLAGS "-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype")
+set(CMAKE_LBG_FLAGS "-head=runtime,stdio,stdlib,string") # -head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 

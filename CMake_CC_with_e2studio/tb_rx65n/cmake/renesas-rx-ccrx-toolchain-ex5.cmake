@@ -18,9 +18,9 @@ macro(SET_TARGET_OPTIONS)
 
 target_compile_features(tb_rx65n PRIVATE c_std_99)
 
-#target_library_generate_options(tb_rx65n PRIVATE
-#-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
-#)
+target_library_generate_options(tb_rx65n PRIVATE
+-head=runtime,stdio,stdlib,string # -head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
+)
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
 

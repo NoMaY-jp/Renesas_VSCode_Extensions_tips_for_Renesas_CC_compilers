@@ -134,6 +134,8 @@ if(gen MATCHES "^Ninja")
   # Therefore, in the case of Ninja, there are several minutes without any messages during execution
   # of library generator actually generating or regenerating libraries. Since such situation cannot
   # be avoided, we put all messages into the output buffer so that we remove unnecessary messages.
+  message("Unfortunately, in the case of Ninja, there are several minutes without any messages \
+during execution of library generator actually generating or regenerating libraries."  )
   execute_process(
     COMMAND ${cmd} ${cmd_args_list}
     #COMMAND_ECHO STDOUT # For debugging.

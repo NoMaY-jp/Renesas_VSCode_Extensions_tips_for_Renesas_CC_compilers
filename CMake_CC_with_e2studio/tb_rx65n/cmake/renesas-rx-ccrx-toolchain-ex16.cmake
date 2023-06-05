@@ -29,15 +29,15 @@ $<$<COMPILE_LANGUAGE:C>:-listfile=.>
 )
 target_compile_options(sample_lib2 PRIVATE
 $<$<COMPILE_LANGUAGE:C>:-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033>
-$<$<COMPILE_LANGUAGE:C,CXX>:-listfile=.>
+$<$<COMPILE_LANGUAGE:C>:-listfile=.>
 )
 target_compile_options(sample_lib3 PRIVATE
 $<$<COMPILE_LANGUAGE:C>:-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033>
-$<$<COMPILE_LANGUAGE:C,CXX>:-listfile=.>
+$<$<COMPILE_LANGUAGE:C>:-listfile=.>
 )
 
 target_library_generate_options(tb_rx65n PRIVATE
--head=runtime,ctype,stdarg,stdio,stdlib,string
+-head=runtime,stdio,stdlib,string # -head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,c99_complex,fenv,inttypes,wchar,wctype
 )
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.

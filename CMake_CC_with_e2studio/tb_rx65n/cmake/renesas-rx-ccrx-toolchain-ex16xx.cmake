@@ -50,7 +50,7 @@ target_library_generate_options(tb_rx65n PRIVATE
 -no_warning=20826 -preinclude=${CMAKE_CURRENT_LIST_DIR}/src/pre_include.h # This line is intended for test purpose.
 )
 target_library_generate_options(tb_rx65n PRIVATE # Dividing the command is intended for test purpos.
-#-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype
+-head=runtime,stdio,stdlib,string # -head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,c99_complex,fenv,inttypes,wchar,wctype
 )
 # Unfortunately, in the case of Ninja, there are several minutes without any messages during execution
 # of library generator actually generating or regenerating libraries. Please wait for a while.
