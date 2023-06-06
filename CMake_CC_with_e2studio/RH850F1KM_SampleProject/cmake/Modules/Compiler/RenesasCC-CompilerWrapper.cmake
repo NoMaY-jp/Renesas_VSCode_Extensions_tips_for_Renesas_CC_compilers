@@ -9,14 +9,6 @@ math(EXPR cmd_args_last "${CMAKE_ARGC} - 1")
 # FIXME: Check list operation such as remove/add/replace/find/etc
 foreach(arg_n RANGE ${cmd_args_first} ${cmd_args_last})
   string(JOIN " " cmd_args_string ${cmd_args_string} ${CMAKE_ARGV${arg_n}})
-  # FIXME: Remove the following code because CMake's script mode option parser is fixed.
-  if(CMAKE_ARGV${arg_n} MATCHES "^'(-P)'$") # This is not only for other than Ninja but also for Ninja because of interoperability.
-    # As of today, compiler's `-P` option needs a workaround due to conflict with CMake's `-P` option for other than Ninja.
-    set(CMAKE_ARGV${arg_n} ${CMAKE_MATCH_1})
-  elseif(CMAKE_ARGV${arg_n} MATCHES "^'(-S)'$") # This is not only for other than Ninja but also for Ninja because of interoperability.
-    # CMake 3.24.0 no longer needs this workaround but it is kept for a while for the backward compatibilty.
-    set(CMAKE_ARGV${arg_n} ${CMAKE_MATCH_1})
-  endif()
   # FIXME: Refactor source file check.
   if((NOT CMAKE_ARGV${arg_n} MATCHES "\\.(obj|i|p|pp|s|asm|src|d|rsp|sub)$") AND CMAKE_ARGV${arg_n} MATCHES "^([^-].*)")
     set(src_name ${CMAKE_MATCH_1})

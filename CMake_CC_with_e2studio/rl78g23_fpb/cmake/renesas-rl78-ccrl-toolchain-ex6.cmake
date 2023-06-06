@@ -126,11 +126,12 @@ endmacro()
 # Note: Renesas compiler options' additional behavior
 #----------------------------------------------------
 
-# The following usage is deprecated because CMake 3.26.0-rc2 no longer causes any problem.
-## In the case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
-## with single quotation character as follow:
-## '-S'
-## '-P'
+# The following usage is removed because Visual Studio 2022 17.6 includes CMake 3.26.0-msvc3.
+## The following usage is deprecated because CMake 3.26.0-rc2 no longer causes any problem.
+### In the case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
+### with single quotation character as follow:
+### '-S'
+### '-P'
 
 # When the language standard such as C90 or C99 is specified by CMake's language standard variables
 # and/or commands, the following definitions may be passed to not only LLVM clangd language server
