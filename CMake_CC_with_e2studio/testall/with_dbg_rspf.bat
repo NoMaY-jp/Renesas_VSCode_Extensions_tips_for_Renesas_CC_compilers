@@ -24,9 +24,18 @@ rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex2xx
 rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex3
 rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex4
 rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex4xx
-call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex5
-call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex6
-call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex6xx
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex5
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex6
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex6xx
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex11
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex12
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex12xx
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex13
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex14
+rem call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex14xx
+call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex15
+call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex16
+call :testall_folder_check tb_rx65n renesas-rx-ccrx-toolchain-ex16xx
 
 rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex1
 rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2
@@ -34,43 +43,82 @@ rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2xx
 rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex3
 rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4
 rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4xx
-call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5
-call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6
-call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex11
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex12
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex12xx
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex13
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex14
+rem call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex14xx
+call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex15
+call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16
+call :testall_folder_check rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16xx
 
 rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex1
 rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex2
 rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex3
 rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex4
-call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5
-call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex6
+rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5
+rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex6
+rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex11
+rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex12
+rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex13
+rem call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex14
+call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex15
+call :testall_folder_check RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex16
 
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex1   x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex2   x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex2xx x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex3   x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4   x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4xx elf mot
-call :run tb_rx65n renesas-rx-ccrx-toolchain-ex5   x mot
-call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6   x mot
-call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6xx elf mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex1    x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex2    x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex2xx  x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex3    x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4    x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4xx  elf mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex5    x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6    x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6xx  elf mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex11   x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex12   x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex12xx x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex13   x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex14   x mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex14xx elf mot
+call :run tb_rx65n renesas-rx-ccrx-toolchain-ex15   x mot
+call :run tb_rx65n renesas-rx-ccrx-toolchain-ex16   x mot
+call :run tb_rx65n renesas-rx-ccrx-toolchain-ex16xx elf mot
 
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex1   x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2   x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2xx x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex3   x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4   x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4xx elf mot
-call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5   x mot
-call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6   x mot "p,s"
-call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx elf mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex1    x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2    x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2xx  x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex3    x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4    x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4xx  elf mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5    x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6    x mot "p,s"
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx  elf mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex11   x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex12   x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex12xx x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex13   x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex14   x mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex14xx elf mot
+call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex15   x mot
+call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16   x mot "p,s"
+call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16xx elf mot
 
-rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex1 x mot
-rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex2 x mot
-rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex3 x mot
-rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex4 x mot
-call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5 x mot
-call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex6 x mot "p,s"
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex1  x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex2  x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex3  x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex4  x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex5  x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex6  x mot "p,s"
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex11 x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex12 x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex13 x mot
+rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex14 x mot
+call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex15 x mot
+call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex16 x mot "p,s"
 
 :pass
 
