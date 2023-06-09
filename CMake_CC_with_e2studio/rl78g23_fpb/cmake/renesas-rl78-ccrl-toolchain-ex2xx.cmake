@@ -1,3 +1,6 @@
+# This is an example of a toolchain file for Renesas CC-RL Compiler. Other examples are here:
+# https://gitlab.kitware.com/NoMaY-jp/Renesas_CC_compilers_tips_for_CMake
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
 set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
 
@@ -7,8 +10,10 @@ set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.re
 
 if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
   set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+  # CMAKE_C_COMPILER can be set simultaneously.
 elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
-  set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrl.exe)
+  set(CMAKE_C_COMPILER   ${TOOLCHAIN_PATH}/ccrl.exe)
+  # CMAKE_CXX_COMPILER can be set simultaneously.
 endif()
 set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
 
@@ -29,10 +34,12 @@ if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
   set(CMAKE_CXX_FLAGS "-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -asmopt=-prn_path=. -cref=.")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -g_line") # This line is intended for test purpose.
+  # CMAKE_C_FLAGS can be set simultaneously.
 else()
   set(CMAKE_C_FLAGS   "-cpu=S3 -goptimize -character_set=utf8 -refs_without_declaration -pass_source")
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -asmopt=-prn_path=. -cref=.")
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -g -g_line") # This line is intended for test purpose.
+  # CMAKE_CXX_FLAGS can be set simultaneously.
 endif()
 set(CMAKE_ASM_FLAGS "-cpu=S3 -goptimize -character_set=utf8")
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -prn_path=.")
@@ -185,8 +192,8 @@ set(CMAKE_EXE_LINKER_FLAGS "-optimize=branch,symbol_delete -entry=_start -stack 
 ## The following usage is deprecated because CMake 3.26.0-rc2 no longer causes any problem.
 ### In the case of other than Ninja, `-P` and `-S` cannot be used. Please quote the option
 ### with single quotation character as follow:
-### '-S'
 ### '-P'
+### '-S'
 
 # When the language standard such as C90 or C99 is specified by CMake's language standard variables
 # and/or commands, the following definitions may be passed to not only LLVM clangd language server

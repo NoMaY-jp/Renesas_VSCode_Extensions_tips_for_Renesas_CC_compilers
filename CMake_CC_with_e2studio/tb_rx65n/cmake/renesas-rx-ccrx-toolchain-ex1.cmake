@@ -1,3 +1,6 @@
+# This is an example of a toolchain file for Renesas CC-RX Compiler. Other examples are here:
+# https://gitlab.kitware.com/NoMaY-jp/Renesas_CC_compilers_tips_for_CMake
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
 set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
 
@@ -5,10 +8,8 @@ set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file i
 set(TOOLCHAIN_PATH C:/Renesas/CS+/CC/CC-RX/V3.05.00/bin) # Quote the path with "..." if it includes space.
 set(EXTERNAL_TOOLCHAIN_PATH C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_733684649/Utilities/ccrx) # Quote the path with "..." if it includes space.  # For e2 studio.
 
-set(CMAKE_PROGRAM_PATH ${TOOLCHAIN_PATH} ${EXTERNAL_TOOLCHAIN_PATH})
-
-set(CMAKE_C_COMPILER ccrx -isa=rxv2)
-#set(CMAKE_RENESAS_XCONVERTER "") # In the case of CS+, define the tool as "" like this or exclude the tool from `Path`.
+set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/ccrx.exe -isa=rxv2)
+set(CMAKE_RENESAS_XCONVERTER ${EXTERNAL_TOOLCHAIN_PATH}/renesas_cc_converter.exe) # In the case of CS+, define the tool as "" or exclude the tool from `Path`.
 
 #########
 # FLAGS #

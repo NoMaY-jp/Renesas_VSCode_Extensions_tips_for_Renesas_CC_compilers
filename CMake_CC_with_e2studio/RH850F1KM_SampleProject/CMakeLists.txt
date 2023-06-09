@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR) # 3.26.0-rc2 or later
 
 project(RH850F1KM_SampleProject C ASM)
 
-set(GSG_BASE_DIR ${CMAKE_SOURCE_DIR})
-
 if(NOT DEFINED DEBUG_RSP_FILE)
     set(DEBUG_RSP_FILE FALSE) # TRUE or FALSE
 endif()
+set(GSG_BASE_DIR ${CMAKE_SOURCE_DIR})
 include(${GSG_BASE_DIR}/dbg_rspf_src/CMakeLists_DEBUG_RSP_FILE.txt)
 
 if(COMMAND SET_DIRECTORY_OPTIONS)
@@ -16,34 +15,34 @@ endif()
 add_executable(${PROJECT_NAME}
     ${DBG_RSPF_MAIN_SRC_C}
 
-    ${GSG_BASE_DIR}/sample_src/sc_cstart.asm
-    ${GSG_BASE_DIR}/sample_src/sc_boot.asm
-    ${GSG_BASE_DIR}/sample_src/sc_intprg.c
+    sample_src/sc_cstart.asm
+    sample_src/sc_boot.asm
+    sample_src/sc_intprg.c
 
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_cg_cgc_user.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_cg_cgc.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_cg_intvector.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_cg_main.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_cg_systeminit.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_smc_interrupt.c
+    src/smc_gen/general/r_cg_cgc_user.c
+    src/smc_gen/general/r_cg_cgc.c
+    src/smc_gen/general/r_cg_intvector.c
+    src/smc_gen/general/r_cg_main.c
+    src/smc_gen/general/r_cg_systeminit.c
+    src/smc_gen/general/r_smc_interrupt.c
 
-    ${GSG_BASE_DIR}/src/smc_gen/r_pincfg/Pin.c
+    src/smc_gen/r_pincfg/Pin.c
 
-    ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
-    ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.asm
-    ${GSG_BASE_DIR}/src/language_extensions_and_standard.c
+    src/test_dep_scan_etc_c.c
+    src/test_dep_scan_etc_asm.asm
+    src/language_extensions_and_standard.c
 )
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
     ${DBG_RSPF_MAIN_INC_C}
 
-    ${GSG_BASE_DIR}/src/smc_gen/general
-    ${GSG_BASE_DIR}/src/smc_gen/r_pincfg
+    src/smc_gen/general
+    src/smc_gen/r_pincfg
     ${GSG_BASE_DIR}
-    ${GSG_BASE_DIR}/src
+    src
 
-    ${GSG_BASE_DIR}/src/test_dep_scan_etc_inc_2
+    src/test_dep_scan_etc_inc_2
 )
 
 target_compile_definitions(${PROJECT_NAME}
@@ -61,19 +60,19 @@ target_include_directories(sample_lib1
     PRIVATE
     ${DBG_RSPF_LIB1_INC_C}
     PUBLIC
-    ${GSG_BASE_DIR}/lib_src/lib1/inc
+    lib_src/lib1/inc
 )
 target_include_directories(sample_lib2
     PRIVATE
     ${DBG_RSPF_LIB2_INC_C}
     PUBLIC
-    ${GSG_BASE_DIR}/lib_src/lib2/inc
+    lib_src/lib2/inc
 )
 target_include_directories(sample_lib3
     PRIVATE
     ${DBG_RSPF_LIB3_INC_C}
     PUBLIC
-    ${GSG_BASE_DIR}/lib_src/lib3/inc
+    lib_src/lib3/inc
 )
 
 target_link_libraries(${PROJECT_NAME} sample_lib1 sample_lib2 sample_lib3)

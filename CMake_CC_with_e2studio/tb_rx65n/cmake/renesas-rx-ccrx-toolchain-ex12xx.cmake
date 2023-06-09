@@ -1,3 +1,6 @@
+# This is an example of a toolchain file for Renesas CC-RX Compiler. Other examples are here:
+# https://gitlab.kitware.com/NoMaY-jp/Renesas_CC_compilers_tips_for_CMake
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
 set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
 set(CMAKE_SYSTEM_PROCESSOR RX)
@@ -23,11 +26,13 @@ if(EXAMPLE_CXX_PROJ_TYPE EQUAL 1)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -listfile=.")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -debug -g_line") # This line is intended for test purpose.
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no_warning=20826 -preinclude=${CMAKE_CURRENT_LIST_DIR}/../src/pre_include.h") # This line is intended for test purpose.
+  # CMAKE_C_FLAGS can be set simultaneously.
 else()
   set(CMAKE_C_FLAGS   "-isa=rxv2 -goptimize -type_size_access_to_volatile -outcode=utf8 -utf8 -nomessage=21644,20010,23034,23035,20177,23033")
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -listfile=.")
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -debug -g_line") # This line is intended for test purpose.
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -no_warning=20826 -preinclude=${CMAKE_CURRENT_LIST_DIR}/../src/pre_include.h") # This line is intended for test purpose.
+  # CMAKE_CXX_FLAGS can be set simultaneously.
 endif()
 set(CMAKE_ASM_FLAGS "-isa=rxv2 -goptimize -utf8")
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -listfile=. -define=aaa,bbb=999,ccc,ddd=\"qqq\",eee") # Somehow not `"qqq"` but `qqq` is passed to the assembler.

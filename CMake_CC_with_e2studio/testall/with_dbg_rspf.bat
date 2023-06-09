@@ -76,8 +76,8 @@ rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex3    x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4    x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex4xx  elf mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex5    x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6    x mot
-rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6xx  elf mot
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6    x mot   "p,s"
+rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex6xx  elf mot "p,s"
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex11   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex12   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex12xx x mot
@@ -85,8 +85,8 @@ rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex13   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex14   x mot
 rem call :run tb_rx65n renesas-rx-ccrx-toolchain-ex14xx elf mot
 call :run tb_rx65n renesas-rx-ccrx-toolchain-ex15   x mot
-call :run tb_rx65n renesas-rx-ccrx-toolchain-ex16   x mot
-call :run tb_rx65n renesas-rx-ccrx-toolchain-ex16xx elf mot
+call :run tb_rx65n renesas-rx-ccrx-toolchain-ex16   x mot   "p,s"
+call :run tb_rx65n renesas-rx-ccrx-toolchain-ex16xx elf mot "p,s"
 
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex1    x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex2    x mot
@@ -95,8 +95,8 @@ rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex3    x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4    x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex4xx  elf mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex5    x mot
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6    x mot "p,s"
-rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx  elf mot
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6    x mot   "p,s"
+rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex6xx  elf mot "p,s"
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex11   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex12   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex12xx x mot
@@ -104,8 +104,8 @@ rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex13   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex14   x mot
 rem call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex14xx elf mot
 call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex15   x mot
-call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16   x mot "p,s"
-call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16xx elf mot
+call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16   x mot   "p,s"
+call :run rl78g23_fpb renesas-rl78-ccrl-toolchain-ex16xx elf mot "p,s"
 
 rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex1  x mot
 rem call :run RH850F1KM_SampleProject renesas-rh850-ccrh-toolchain-ex2  x mot
@@ -165,7 +165,7 @@ set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     goto :fail
 )
@@ -173,12 +173,12 @@ set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --targ
 echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%3" (
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     echo\
     echo ERROR: The following file does not exist.
@@ -186,7 +186,7 @@ if not exist "%TESTROOT%\%1\build\%1.%3" (
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%4" (
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
     echo\
     echo ERROR: The following file does not exist.
@@ -201,12 +201,12 @@ if not "%~5" == "p,s" goto Ninja_skip_p_s
     echo %CMDLINE%
     %CMDLINE%
     if errorlevel 1 (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.p" (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         echo\
         echo ERROR: The following file does not exist.
@@ -221,12 +221,12 @@ if not "%~5" == "p,s" goto Ninja_skip_p_s
     echo %CMDLINE%
     %CMDLINE%
     if errorlevel 1 (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.s" (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
         echo\
         echo ERROR: The following file does not exist.
@@ -234,7 +234,7 @@ if not "%~5" == "p,s" goto Ninja_skip_p_s
         goto :fail
     )
 :Ninja_skip_p_s
-choice /t 3 /d y>nul
+"%CMAKE%" -E sleep 3
 move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_Ninja>nul
 echo\
 echo PASS: %1.%3 is successfully built.
@@ -257,7 +257,7 @@ set CMDLINE="%CMAKE%" --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     goto :fail
 )
@@ -265,13 +265,13 @@ set CMDLINE="%CMAKE%" --build %TESTROOT%\%1\build --config RelWithDebInfo --targ
 echo %CMDLINE%
 %CMDLINE%
 if errorlevel 1 (
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     goto :fail
 )
 if not exist "%TESTROOT%\%1\build\%1.%3" (
     echo\
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     echo ERROR: The following file does not exist.
     echo %TESTRESULT%\build_%1_%2_UnixMakefile\%1.%3
@@ -279,7 +279,7 @@ if not exist "%TESTROOT%\%1\build\%1.%3" (
 )
 if not exist "%TESTROOT%\%1\build\%1.%4" (
     echo\
-    choice /t 3 /d y>nul
+    "%CMAKE%" -E sleep 3
     move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
     echo ERROR: The following file does not exist.
     echo %TESTRESULT%\build_%1_%2_UnixMakefile\%1.%4
@@ -293,12 +293,12 @@ if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
     echo %CMDLINE%
     %CMDLINE%
     if errorlevel 1 (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.p" (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         echo\
         echo ERROR: The following file does not exist.
@@ -313,12 +313,12 @@ if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
     echo %CMDLINE%
     %CMDLINE%
     if errorlevel 1 (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         goto :fail
     )
     if not exist "%TESTROOT%\%1\build\test_dep_scan_etc_c.s" (
-        choice /t 3 /d y>nul
+        "%CMAKE%" -E sleep 3
         move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
         echo\
         echo ERROR: The following file does not exist.
@@ -326,7 +326,7 @@ if not "%~5" == "p,s" goto UnixMakefile_skip_p_s
         goto :fail
     )
 :UnixMakefile_skip_p_s
-choice /t 3 /d y>nul
+"%CMAKE%" -E sleep 3
 move %TESTROOT%\%1\build %TESTRESULT%\build_%1_%2_UnixMakefile>nul
 echo\
 echo PASS: %1.%3 is successfully built.

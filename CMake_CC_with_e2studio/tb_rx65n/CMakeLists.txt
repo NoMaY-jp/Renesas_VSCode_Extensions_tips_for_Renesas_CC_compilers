@@ -29,11 +29,10 @@ elseif(EXAMPLE_CXX_PROJ_TYPE EQUAL 2)
 
 endif()
 
-set(GSG_BASE_DIR ${CMAKE_SOURCE_DIR})
-
 if(NOT DEFINED DEBUG_RSP_FILE)
     set(DEBUG_RSP_FILE FALSE) # TRUE or FALSE
 endif()
+set(GSG_BASE_DIR ${CMAKE_SOURCE_DIR})
 include(${GSG_BASE_DIR}/dbg_rspf_src/CMakeLists_DEBUG_RSP_FILE.txt)
 
 if(COMMAND SET_DIRECTORY_OPTIONS)
@@ -43,55 +42,55 @@ endif()
 add_executable(${PROJECT_NAME}
     ${DBG_RSPF_MAIN_SRC_C}
 
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_cg_hardware_setup.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_smc_cgc.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_smc_cgc_user.c
-    ${GSG_BASE_DIR}/src/smc_gen/general/r_smc_interrupt.c
+    src/smc_gen/general/r_cg_hardware_setup.c
+    src/smc_gen/general/r_smc_cgc.c
+    src/smc_gen/general/r_smc_cgc_user.c
+    src/smc_gen/general/r_smc_interrupt.c
 
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c
+    src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c
 
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/dbsct.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/lowlvl.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/lowsrc.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/mcu_locks.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_bsp_common.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_bsp_interrupts.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_bsp_locking.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_bsp_mcu_startup.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_bsp_software_interrupt.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/r_rx_intrinsic_functions.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/resetprg.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/all/sbrk.c
+    src/smc_gen/r_bsp/mcu/all/dbsct.c
+    src/smc_gen/r_bsp/mcu/all/lowlvl.c
+    src/smc_gen/r_bsp/mcu/all/lowsrc.c
+    src/smc_gen/r_bsp/mcu/all/mcu_locks.c
+    src/smc_gen/r_bsp/mcu/all/r_bsp_common.c
+    src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c
+    src/smc_gen/r_bsp/mcu/all/r_bsp_interrupts.c
+    src/smc_gen/r_bsp/mcu/all/r_bsp_locking.c
+    src/smc_gen/r_bsp/mcu/all/r_bsp_mcu_startup.c
+    src/smc_gen/r_bsp/mcu/all/r_bsp_software_interrupt.c
+    src/smc_gen/r_bsp/mcu/all/r_rx_intrinsic_functions.c
+    src/smc_gen/r_bsp/mcu/all/resetprg.c
+    src/smc_gen/r_bsp/mcu/all/sbrk.c
 
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/rx65n/mcu_mapped_interrupts.c
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp/mcu/rx65n/vecttbl.c
+    src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c
+    src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c
+    src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c
+    src/smc_gen/r_bsp/mcu/rx65n/mcu_mapped_interrupts.c
+    src/smc_gen/r_bsp/mcu/rx65n/vecttbl.c
 
-    ${GSG_BASE_DIR}/src/smc_gen/r_pincfg/Pin.c
+    src/smc_gen/r_pincfg/Pin.c
 
-    ${GSG_BASE_DIR}/src/tb_rx65n.c
-    ${GSG_BASE_DIR}/src/sample_asm.src
-    ${GSG_BASE_DIR}/src/sample_cpp.cpp # This file is activated in only CXX project.
-    ${GSG_BASE_DIR}/src/test_dep_scan_etc_c.c
-    ${GSG_BASE_DIR}/src/test_dep_scan_etc_asm.src
-    ${GSG_BASE_DIR}/src/language_extensions_and_standard.c
-    ${GSG_BASE_DIR}/src/language_extensions_and_standard_cpp.cpp # This file is activated in only CXX project.
+    src/tb_rx65n.c
+    src/sample_asm.src
+    src/sample_cpp.cpp # This file is activated in only CXX project.
+    src/test_dep_scan_etc_c.c
+    src/test_dep_scan_etc_asm.src
+    src/language_extensions_and_standard.c
+    src/language_extensions_and_standard_cpp.cpp # This file is activated in only CXX project.
 )
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
     ${DBG_RSPF_MAIN_INC_C}
 
-    ${GSG_BASE_DIR}/src/smc_gen/general
-    ${GSG_BASE_DIR}/src/smc_gen/r_bsp
-    ${GSG_BASE_DIR}/src/smc_gen/r_config
-    ${GSG_BASE_DIR}/src/smc_gen/r_pincfg
-    ${GSG_BASE_DIR}/src
+    src/smc_gen/general
+    src/smc_gen/r_bsp
+    src/smc_gen/r_config
+    src/smc_gen/r_pincfg
+    src
 
-    ${GSG_BASE_DIR}/src/test_dep_scan_etc_inc_2
+    src/test_dep_scan_etc_inc_2
 )
 
 target_compile_definitions(${PROJECT_NAME}
@@ -110,19 +109,19 @@ target_include_directories(sample_lib1
     PRIVATE
     ${DBG_RSPF_LIB1_INC_C}
     PUBLIC
-    ${GSG_BASE_DIR}/lib_src/lib1/inc
+    lib_src/lib1/inc
 )
 target_include_directories(sample_lib2
     PRIVATE
     ${DBG_RSPF_LIB2_INC_C}
     PUBLIC
-    ${GSG_BASE_DIR}/lib_src/lib2/inc
+    lib_src/lib2/inc
 )
 target_include_directories(sample_lib3
     PRIVATE
     ${DBG_RSPF_LIB3_INC_C}
     PUBLIC
-    ${GSG_BASE_DIR}/lib_src/lib3/inc
+    lib_src/lib3/inc
 )
 
 target_link_libraries(${PROJECT_NAME} sample_lib1 sample_lib2 sample_lib3)

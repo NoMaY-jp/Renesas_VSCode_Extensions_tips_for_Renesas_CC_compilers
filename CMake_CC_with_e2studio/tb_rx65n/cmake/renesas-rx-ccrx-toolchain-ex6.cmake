@@ -1,3 +1,6 @@
+# This is an example of a toolchain file for Renesas CC-RX Compiler. Other examples are here:
+# https://gitlab.kitware.com/NoMaY-jp/Renesas_CC_compilers_tips_for_CMake
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules) # Tell CMake the path of support module for Renesas CC compilers.
 set(CMAKE_SYSTEM_NAME Generic-RenesasCC) # Tell CMake that this toolchain file is to be used for cross-compiling using Renesas CC compilers.
 

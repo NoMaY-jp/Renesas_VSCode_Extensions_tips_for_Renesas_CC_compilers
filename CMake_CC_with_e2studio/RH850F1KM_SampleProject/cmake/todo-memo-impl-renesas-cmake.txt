@@ -68,10 +68,10 @@ Pending issues:
 
 Unselected ideas:
 
-* Using ENV{Path} in stead of CMAKE_PROGRAM_PATH.
+* Using ENV{Path} in stead of CMAKE_PROGRAM_PATH. <-- deprecated
 * Using CMAKE_<LANG>_COMPILER_EXTERNAL_TOOLCHAIN in stead of CMAKE_PROGRAM_PATH.
 
-  Selected:
+  Selected: <-- deprecated
     set(CMAKE_PROGRAM_PATH ${TOOLCHAIN_PATH} ${EXTERNAL_TOOLCHAIN_PATH})
 
   Unselected:
