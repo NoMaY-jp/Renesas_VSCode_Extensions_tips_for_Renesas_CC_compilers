@@ -1,0 +1,73 @@
+{
+  // https://docs.microsoft.com/cpp/build/open-folder-projects-cpp
+  // https://docs.microsoft.com/cpp/build/launch-vs-schema-reference-cpp
+  // https://docs.microsoft.com/visualstudio/ide/customize-build-and-debug-tasks-in-visual-studio
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "cppdbg",
+      "name": "${env.DEBUG_CONFIG_HARDWAREDEBUG_NAME}",
+      "project": "Visual Studio MCU.elf", // The same name file must exist.
+      "cwd": "", // Visual Studio MCU project seems to need this setting.
+      "program": "${env.PROJECT_ROOT}\\Visual Studio MCU.elf", // The same name file must exist.
+      "MIMode": "gdb",
+      "targetArchitecture": "x86",
+      "miDebuggerPath": "${env.PROJECT_ROOT}\\.vs\\.scripts\\gdb.bat",
+      "miDebuggerArgs": "\"${env.SUPPORT_AREA}\\DebugComp\\RL78\" \"${env.PYTHONHOME}\" \"${env.PROJECT_ROOT}\\${env.DEBUG_CONFIG_HARDWAREDEBUG_LCFG}\" \"${env.PROJECT_ROOT}\\${env.BUILD_CONFIG_DEBUG_NAME}\\${env.PROGRAM_NAME}${env.PROGRAM_EXT}\" ; --cd=\"${env.PROJECT_ROOT}\"",
+      "setupCommands": [
+        {
+          "text": "-interpreter-exec console \"source .vs\\\\.scripts\\\\gdb_setup.gdb\""
+        }
+      ],
+      "customLaunchSetupCommands": [
+        {
+          "text": "-target-select extended-remote localhost:60916"
+        },
+        {
+          "text": "-interpreter-exec console \"source .vs\\\\.scripts\\\\gdb_custom_launch_setup.gdb\""
+        }
+      ],
+      "launchCompleteCommand": "None",
+      "debugServerPath": "${env.PROJECT_ROOT}\\.vs\\.scripts\\gdbserver.bat",
+      "debugServerArgs": "\"${env.SUPPORT_AREA}\\DebugComp\\RL78\" \"${env.PYTHONHOME}\" \"${env.PROJECT_ROOT}\\${env.DEBUG_CONFIG_HARDWAREDEBUG_LCFG}\" \"${env.PROJECT_ROOT}\\${env.BUILD_CONFIG_DEBUG_NAME}\\${env.PROGRAM_NAME}${env.PROGRAM_EXT}\" ; -p 60916 ${env.DEBUG_CONFIG_HARDWAREDEBUG_SOPT}",
+      "serverStarted": "GDB: ",
+      "serverLaunchTimeout": 30000,
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "type": "cppdbg",
+      "name": "${env.DEBUG_CONFIG_SIMULATORDEBUG_NAME}",
+      "project": "Visual Studio MCU.elf", // The same name file must exist.
+      "cwd": "", // Visual Studio MCU project seems to need this setting.
+      "program": "Visual Studio MCU.elf", // The same name file must exist.
+      "MIMode": "gdb",
+      "targetArchitecture": "x86",
+      "miDebuggerPath": "${env.PROJECT_ROOT}\\.vs\\.scripts\\gdb.bat",
+      "miDebuggerArgs": "\"${env.SUPPORT_AREA}\\DebugComp\\RL78\" \"${env.PYTHONHOME}\" \"${env.PROJECT_ROOT}\\${env.DEBUG_CONFIG_SIMULATORDEBUG_LCFG}\" \"${env.PROJECT_ROOT}\\${env.BUILD_CONFIG_DEBUG_NAME}\\${env.PROGRAM_NAME}${env.PROGRAM_EXT}\" ; --cd=\"${env.PROJECT_ROOT}\"",
+      "setupCommands": [
+        {
+          "text": "-interpreter-exec console \"source .vs\\\\.scripts\\\\gdb_setup.gdb\""
+        }
+      ],
+      "customLaunchSetupCommands": [
+        {
+          "text": "-target-select extended-remote localhost:60916"
+        },
+        {
+          "text": "-interpreter-exec console \"source .vs\\\\.scripts\\\\gdb_custom_launch_setup.gdb\""
+        }
+      ],
+      "launchCompleteCommand": "None",
+      "debugServerPath": "${env.PROJECT_ROOT}\\.vs\\.scripts\\gdbserver.bat",
+      "debugServerArgs": "\"${env.SUPPORT_AREA}\\DebugComp\\RL78\" \"${env.PYTHONHOME}\" \"${env.PROJECT_ROOT}\\${env.DEBUG_CONFIG_SIMULATORDEBUG_LCFG}\" \"${env.PROJECT_ROOT}\\${env.BUILD_CONFIG_DEBUG_NAME}\\${env.PROGRAM_NAME}${env.PROGRAM_EXT}\" ; -p 60916 ${env.DEBUG_CONFIG_SIMULATORDEBUG_SOPT}",
+      "serverStarted": "GDB: ",
+      "serverLaunchTimeout": 30000,
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  // https://docs.microsoft.com/cpp/build/open-folder-projects-cpp
+  // https://docs.microsoft.com/cpp/build/cppproperties-schema-reference
+  "configurations": [
+    {
+      "name": "CC-RX",
+      "includePath": [
+        "${env.TCINSTALL}\\include\\**",
+        "${env.PROJECT_ROOT}\\src\\**"
+      ],
+      "defines": [
+      ],
+      // https://docs.microsoft.com/cpp/build/reference/std-specify-language-standard-version
+      // Unfortunately MSVC cannot accept C99 standard.
+      // "compilerSwitches": "/std:c99",
+      "compilerSwitches": "/std:c11",
+      "intelliSenseMode": "windows-msvc-x86",
+      "forcedInclude": [
+        ".vs\\c_cpp_intellisense_helper.h"
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "name": "GNURX",
+      "includePath": [
+        "${env.PROJECT_ROOT}\\src\\**"
+      ],
+      "defines": [
+      ],
+      "compilers": {
+        "c": {
+          "path": "${env.TCINSTALL}\\bin\\rx-elf-gcc.exe",
+          "standard": "gnu99",
+          "args": "-mlittle-endian-data -misa=v3 -mdfpu"
+        },
+        "cpp": {
+          "path": "${env.TCINSTALL}\\bin\\rx-elf-g++.exe",
+          "standard": "gnu++17",
+          "args": "-mlittle-endian-data -misa=v3 -mdfpu"
+        }
+      },
+      "intelliSenseMode": "linux-gcc-x86",
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    }
+  ],
+  "environments": [
+    {
+      // Do not edit the following line if you use 'VS setup for e2 studio.launch' program.
+      "PROJECT_NAME": "!ProjectRootBaseName!",
+      //
+      // Do not edit the following two lines if you use 'VS setup for e2 studio.launch' program.
+      "PROGRAM_NAME": "${env.PROJECT_NAME}",
+      "PROGRAM_EXT": ".elf",
+      //
+      // Do not edit the following line if you use 'VS setup for e2 studio.launch' program.
+      "E2STUDIO_WORKSPACE_FOLDER": "C:\\Renesas\\GitHubDesktop\\workspaces\\workspace_e2v202204",
+      //
+      "BUILD_CONFIG_RELEASE_NAME": "Release", // Reserved for future use.
+      "BUILD_CONFIG_DEBUG_NAME": "HardwareDebug",
+      //
+      "DEBUG_CONFIG_HARDWAREDEBUG_NAME": "HardwareDebug",
+      "DEBUG_CONFIG_HARDWAREDEBUG_LCFG": "${env.PROJECT_NAME} ${env.DEBUG_CONFIG_HARDWAREDEBUG_NAME}.launch",
+      "DEBUG_CONFIG_HARDWAREDEBUG_SOPT": "",
+      "DEBUG_CONFIG_SIMULATORDEBUG_NAME": "RenesasSimDebug",
+      "DEBUG_CONFIG_SIMULATORDEBUG_LCFG": "${env.PROJECT_NAME} ${env.DEBUG_CONFIG_SIMULATORDEBUG_NAME}.launch",
+      "DEBUG_CONFIG_SIMULATORDEBUG_SOPT": "",
+      //
+      "PROJECT_ROOT": "${projectRoot}.", // Note that this pre-defined dynamic macro ends with '\'.
+      "MAKE_OPTIONS": "-r -j8 -k",
+      //
+      // Do not edit the following five lines if you use 'VS setup for e2 studio.launch' program.
+      "ECLIPSE_HOME": "C:\\Renesas\\e2studio64_v202204\\eclipse",
+      "SUPPORT_AREA": "C:\\Renesas\\e2studio64\\SupportFiles\\.eclipse\\com.renesas.platform_1403239915",
+      "PYTHONHOME": "${env.ECLIPSE_HOME}\\runtimes\\python\\2.7.12_x86",
+      "TCINSTALL": "C:\\Renesas\\GCCLLVM\\GNURX-ELF\\8.3.0.202104\\rx-elf\\rx-elf",
+      "TC_NAME": "GNURX",
+      //
+      "environment": "Renesas_R_CPUs"
+    }
+  ]
+}

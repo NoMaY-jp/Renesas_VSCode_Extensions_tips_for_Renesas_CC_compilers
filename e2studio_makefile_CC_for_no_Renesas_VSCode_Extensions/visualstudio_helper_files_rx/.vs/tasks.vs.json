@@ -1,0 +1,134 @@
+{
+  // https://docs.microsoft.com/cpp/build/open-folder-projects-cpp
+  // https://docs.microsoft.com/cpp/build/tasks-vs-json-schema-reference-cpp
+  // https://docs.microsoft.com/visualstudio/ide/customize-build-and-debug-tasks-in-visual-studio
+  "version": "0.2.1",
+  "outDir": "\"${projectRoot}\"",
+  "tasks": [
+    {
+      "taskLabel": "Build",
+      "appliesTo": "Visual Studio MCU*.elf,.project,.cproject",
+      "type": "launch",
+      "contextType": "build",
+      "command": "PowerShell.exe",
+      "args": [
+        "-Command",
+        ".vs\\.scripts\\build.ps1",
+        "build.bat",
+        "make",
+        "build",
+        "\"${env.PROJECT_ROOT}\\${env.BUILD_CONFIG_DEBUG_NAME}\"",
+        "${env.MAKE_OPTIONS}",
+        ";exit",
+        "$LASTEXITCODE"
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "taskLabel": "Rebuild",
+      "appliesTo": "Visual Studio MCU.elf,.project,.cproject",
+      "type": "launch",
+      "contextType": "rebuild",
+      "command": "PowerShell.exe",
+      "args": [
+        "-Command",
+        ".vs\\.scripts\\build.ps1",
+        "build.bat",
+        "make",
+        "cleanBuild",
+        "\"${env.PROJECT_ROOT}\\${env.BUILD_CONFIG_DEBUG_NAME}\"",
+        "${env.MAKE_OPTIONS}",
+        ";exit",
+        "$LASTEXITCODE"
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "taskLabel": "Build with updating makefile",
+      "appliesTo": "Visual Studio MCU*.elf,.project,.cproject",
+      "type": "launch",
+      "contextType": "custom",
+      "command": "PowerShell.exe",
+      "args": [
+        "-Command",
+        ".vs\\.scripts\\build.ps1",
+        "build.bat",
+        "headlessbuild",
+        "-build",
+        "\"${env.E2STUDIO_WORKSPACE_FOLDER}\\.headlessbuild\\${env.PROJECT_NAME}_in_!projectRootBaseName!\"",
+        "\"${env.PROJECT_ROOT}\"",
+        "${env.PROJECT_NAME}",
+        "${env.BUILD_CONFIG_DEBUG_NAME}",
+        ";exit",
+        "$LASTEXITCODE"
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "taskLabel": "Rebuild with updating makefile",
+      "appliesTo": "Visual Studio MCU.elf,.project,.cproject",
+      "type": "launch",
+      "contextType": "custom",
+      "command": "PowerShell.exe",
+      "args": [
+        "-Command",
+        ".vs\\.scripts\\build.ps1",
+        "build.bat",
+        "headlessbuild",
+        "-cleanBuild",
+        "\"${env.E2STUDIO_WORKSPACE_FOLDER}\\.headlessbuild\\${env.PROJECT_NAME}_in_!projectRootBaseName!\"",
+        "\"${env.PROJECT_ROOT}\"",
+        "${env.PROJECT_NAME}",
+        "${env.BUILD_CONFIG_DEBUG_NAME}",
+        ";exit",
+        "$LASTEXITCODE"
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "taskLabel": "Launch e2 studio",
+      "appliesTo": "*",
+      "type": "default",
+      "contextType": "custom",
+      "command": ".vs\\.scripts\\exec.bat",
+      "args": [
+        "\"cd /d \"${env.E2STUDIO_WORKSPACE_FOLDER}\"\"",
+        "\"start \"\" \"${env.ECLIPSE_HOME}\\e2studio.exe\" -data .\""
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    },
+    {
+      "taskLabel": "Open Renesas Keyword Search Page",
+      "appliesTo": "*",
+      "type": "default",
+      "contextType": "custom",
+      "command": "${env.COMSPEC}",
+      "args": [
+        "start https://www.renesas.com/search"
+      ]
+    },
+    {
+      "taskLabel": "Open CC-RX Help",
+      "appliesTo": "*",
+      "type": "default",
+      "contextType": "custom",
+      "command": ".vs\\.scripts\\exec.bat",
+      "args": [
+        "\"if exist \"${env.TCINSTALL}\\Help\\Compiler-CCRX.chm\" start hh.exe \"${env.TCINSTALL}\\Help\\Compiler-CCRX.chm\"\""
+      ],
+      "inheritEnvironments": [
+        "Renesas_R_CPUs"
+      ]
+    }
+  ]
+}

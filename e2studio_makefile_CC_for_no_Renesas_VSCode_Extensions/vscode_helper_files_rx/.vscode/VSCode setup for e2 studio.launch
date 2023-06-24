@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.ui.externaltools.ProgramLaunchConfigurationType">
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="E2STUDIO_WORKSPACE_FOLDER" value="${workspace_loc}"/>
+        <mapEntry key="ECLIPSE_HOME" value="${eclipse_home}"/>
+        <mapEntry key="PROJECT_NAME" value="${project_name}"/>
+        <mapEntry key="PYTHONHOME" value="${eclipse_home}runtimes\python\2.7.12_x86"/>
+        <mapEntry key="SUPPORT_AREA" value="${support_area_loc}"/>
+    </mapAttribute>
+    <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+        <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_INCLUDE_REFERENCED_PROJECTS" value="false"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LAUNCH_CONFIGURATION_BUILD_SCOPE" value="${none}"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${env_var:ComSpec}"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="/c ${project_loc}\.vscode\.scripts\update_properties_json.bat"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${project_loc}\${config_name:${project_name}}"/>
+</launchConfiguration>

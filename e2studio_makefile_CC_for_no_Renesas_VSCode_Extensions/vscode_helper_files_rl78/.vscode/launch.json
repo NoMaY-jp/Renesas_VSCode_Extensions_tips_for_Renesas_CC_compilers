@@ -1,0 +1,86 @@
+{
+    // https://code.visualstudio.com/docs/editor/debugging#_launch-configurations
+    // https://code.visualstudio.com/docs/cpp/launch-json-reference
+    // https://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI.html
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "HardwareDebug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Visual Studio MCU.elf",
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "targetArchitecture": "x86",
+            "debugServerPath": "${workspaceFolder}\\.vscode\\.scripts\\gdbserver.bat",
+            "debugServerArgs": "\"%SUPPORT_AREA%\\DebugComp\\RL78\" \"%PYTHONHOME%\" \"%PROJECT_ROOT%\\%DEBUG_CONFIG_HARDWAREDEBUG_LCFG%\" \"%PROJECT_ROOT%\\%BUILD_CONFIG_DEBUG_NAME%\\%PROGRAM_NAME%%PROGRAM_EXT%\" ; -p 60916 %DEBUG_CONFIG_HARDWAREDEBUG_SOPT%",
+            "serverStarted": "GDB: ",
+            "serverLaunchTimeout": 30000,
+            "MIMode": "gdb",
+            "miDebuggerPath": "${workspaceFolder}\\.vscode\\.scripts\\gdb.bat",
+            "miDebuggerArgs": "\"%SUPPORT_AREA%\\DebugComp\\RL78\" \"%PYTHONHOME%\" \"%PROJECT_ROOT%\\%DEBUG_CONFIG_HARDWAREDEBUG_LCFG%\" \"%PROJECT_ROOT%\\%BUILD_CONFIG_DEBUG_NAME%\\%PROGRAM_NAME%%PROGRAM_EXT%\" ; --cd=\"%PROJECT_ROOT%\"",
+            "stopAtEntry": true,
+            "stopAtConnect": true,
+            "setupCommands": [
+                {
+                    "text": "-interpreter-exec console \"source .vscode\\\\.scripts\\\\gdb_setup.gdb\"",
+                }
+            ],
+            "customLaunchSetupCommands": [
+                {
+                    "text": "-target-select extended-remote localhost:60916",
+                },
+                {
+                    "text": "-interpreter-exec console \"source .vscode\\\\.scripts\\\\gdb_custom_launch_setup.gdb\""
+                }
+            ],
+            "logging": {
+                "exceptions": true,
+                "moduleLoad": false,
+                "programOutput": true,
+                "engineLogging": false,
+                "trace": false,
+                "traceResponse": false,
+            }
+        },
+        {
+            "name": "RenesasSimDebug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Visual Studio MCU.elf",
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "targetArchitecture": "x86",
+            "debugServerPath": "${workspaceFolder}\\.vscode\\.scripts\\gdbserver.bat",
+            "debugServerArgs": "\"%SUPPORT_AREA%\\DebugComp\\RL78\" \"%PYTHONHOME%\" \"%PROJECT_ROOT%\\%DEBUG_CONFIG_SIMULATORDEBUG_LCFG%\" \"%PROJECT_ROOT%\\%BUILD_CONFIG_DEBUG_NAME%\\%PROGRAM_NAME%%PROGRAM_EXT%\" ; -p 60916 %DEBUG_CONFIG_SIMULATORDEBUG_SOPT%",
+            "serverStarted": "GDB: ",
+            "serverLaunchTimeout": 30000,
+            "MIMode": "gdb",
+            "miDebuggerPath": "${workspaceFolder}\\.vscode\\.scripts\\gdb.bat",
+            "miDebuggerArgs": "\"%SUPPORT_AREA%\\DebugComp\\RL78\" \"%PYTHONHOME%\" \"%PROJECT_ROOT%\\%DEBUG_CONFIG_SIMULATORDEBUG_LCFG%\" \"%PROJECT_ROOT%\\%BUILD_CONFIG_DEBUG_NAME%\\%PROGRAM_NAME%%PROGRAM_EXT%\" ; --cd=\"%PROJECT_ROOT%\"",
+            "stopAtEntry": true,
+            "stopAtConnect": true,
+            "setupCommands": [
+                {
+                    "text": "-interpreter-exec console \"source .vscode\\\\.scripts\\\\gdb_setup.gdb\"",
+                }
+            ],
+            "customLaunchSetupCommands": [
+                {
+                    "text": "-target-select extended-remote localhost:60916",
+                },
+                {
+                    "text": "-interpreter-exec console \"source .vscode\\\\.scripts\\\\gdb_custom_launch_setup.gdb\""
+                }
+            ],
+            "logging": {
+                "exceptions": true,
+                "moduleLoad": false,
+                "programOutput": true,
+                "engineLogging": false,
+                "trace": false,
+                "traceResponse": false,
+            }
+        }
+    ]
+}

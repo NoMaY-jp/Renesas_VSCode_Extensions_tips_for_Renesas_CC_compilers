@@ -1,0 +1,91 @@
+{
+    // https://code.visualstudio.com/docs/cpp/customize-default-settings-cpp#_updated-ccpppropertiesjson-syntax
+    // https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference
+    "configurations": [
+        {
+            "name": "CC-RL",
+            "includePath": [
+                "${env:TCINSTALL}\\inc\\**",
+                "${env:PROJECT_ROOT}\\src\\**"
+            ],
+            "defines": [
+            ],
+            "compilerPath": "",
+            "cStandard": "c99",
+            "intelliSenseMode": "windows-msvc-x86",
+            "forcedInclude": [
+                ".vscode\\c_cpp_intellisense_helper.h"
+            ]
+        },
+        {
+            "name": "GNURL78",
+            "includePath": [
+                "${env:PROJECT_ROOT}\\src\\**"
+            ],
+            "defines": [
+           ],
+            "compilerPath": "${env:TCINSTALL}\\bin\\rl78-elf-g++.exe",
+            "compilerArgs": [
+                "-mg14 -mmul=g14"
+            ],
+            "cStandard": "gnu99",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x86",
+            "forcedInclude": [
+                ".vscode\\c_cpp_intellisense_helper.h"
+            ]
+        },
+        {
+            "name": "LLVM-RL78",
+            "includePath": [
+                "${env:PROJECT_ROOT}\\src\\**"
+            ],
+            "defines": [
+            ],
+            "compilerPath": "${env:TCINSTALL}\\bin\\clang++.exe",
+            "compilerArgs": [
+                "--target=rl78 -mcpu=s3 -frenesas-extensions"
+            ],
+            "cStandard": "gnu99",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "windows-clang-x86",
+            "forcedInclude": [
+                ".vscode\\c_cpp_intellisense_helper.h"
+            ]
+        }
+    ],
+    "env": {
+        // Do not edit the following line if you use 'VSCode setup for e2 studio.launch' program.
+        "PROJECT_NAME": "${workspaceFolderBaseName}",
+        //
+        // Do not edit the following two lines if you use 'VSCode setup for e2 studio.launch' program.
+        "PROGRAM_NAME": "${env.PROJECT_NAME}",
+        "PROGRAM_EXT": ".elf",
+        //
+        // Do not edit the following line if you use 'VSCode setup for e2 studio.launch' program.
+        "E2STUDIO_WORKSPACE_FOLDER": "C:\\Renesas\\GitHubDesktop\\workspaces\\workspace_e2v202204",
+        //
+        "BUILD_CONFIG_RELEASE_NAME": "Release", // Reserved for future use.
+        "BUILD_CONFIG_DEBUG_NAME": "HardwareDebug",
+        //
+        "DEBUG_CONFIG_HARDWAREDEBUG_NAME": "HardwareDebug",
+        "DEBUG_CONFIG_HARDWAREDEBUG_LCFG": "${env.PROJECT_NAME} ${env.DEBUG_CONFIG_HARDWAREDEBUG_NAME}.launch",
+        "DEBUG_CONFIG_HARDWAREDEBUG_SOPT": "-uComPort= COM9",
+        "DEBUG_CONFIG_SIMULATORDEBUG_NAME": "RenesasSimDebug",
+        "DEBUG_CONFIG_SIMULATORDEBUG_LCFG": "${env.PROJECT_NAME} ${env.DEBUG_CONFIG_SIMULATORDEBUG_NAME}.launch",
+        "DEBUG_CONFIG_SIMULATORDEBUG_SOPT": "",
+        //
+        "PROJECT_ROOT": "${workspaceFolder}",
+        "MAKE_OPTIONS": "-r -j8 -k",
+        //
+        // Do not edit the following five lines if you use 'VSCode setup for e2 studio.launch' program.
+        "ECLIPSE_HOME": "C:\\Renesas\\e2studio64_v202204\\eclipse",
+        "SUPPORT_AREA": "C:\\Renesas\\e2studio64\\SupportFiles\\.eclipse\\com.renesas.platform_1403239915",
+        "PYTHONHOME": "${env.ECLIPSE_HOME}\\runtimes\\python\\2.7.12_x86",
+        "TCINSTALL": "C:\\Renesas\\GCCLLVM\\LLVM-RL78\\10.0.0.202203",
+        "TC_NAME": "LLVM-RL78",
+        //
+        "environment": "Renesas_R_CPUs" // Not used but for similarity to Visual Studio's 'CppProperties.json'.
+    },
+    "version": 4
+}

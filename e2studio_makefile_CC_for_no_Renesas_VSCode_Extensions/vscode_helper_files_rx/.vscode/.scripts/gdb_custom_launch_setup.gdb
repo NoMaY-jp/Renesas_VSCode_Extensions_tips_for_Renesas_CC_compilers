@@ -1,0 +1,4 @@
+monitor enable_stopped_notify_on_connect
+monitor enable_execute_on_connect
+load
+monitor reset

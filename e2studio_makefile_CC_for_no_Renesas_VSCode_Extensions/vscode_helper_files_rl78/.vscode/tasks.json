@@ -1,0 +1,142 @@
+{
+    // https://code.visualstudio.com/docs/editor/tasks#_custom-tasks
+    // https://code.visualstudio.com/docs/editor/tasks-appendix
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": ".vscode\\.scripts\\build.ps1",
+            "args": [
+                "build.bat",
+                "make",
+                "build",
+                "\"%PROJECT_ROOT%\\%BUILD_CONFIG_DEBUG_NAME%\"",
+                "%MAKE_OPTIONS%",
+                ";exit",
+                "$LASTEXITCODE"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                {
+                    "base": "$msCompile",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ]
+                },
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Rebuild",
+            "type": "shell",
+            "command": ".vscode\\.scripts\\build.ps1",
+            "args": [
+                "build.bat",
+                "make",
+                "cleanBuild",
+                "\"%PROJECT_ROOT%\\%BUILD_CONFIG_DEBUG_NAME%\"",
+                "%MAKE_OPTIONS%",
+                ";exit",
+                "$LASTEXITCODE"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                {
+                    "base": "$msCompile",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ]
+                },
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Build with updating makefile",
+            "type": "shell",
+            "command": ".vscode\\.scripts\\build.ps1",
+            "args": [
+                "build.bat",
+                "headlessbuild",
+                "-build",
+                "\"%E2STUDIO_WORKSPACE_FOLDER%\\.headlessbuild\\%PROJECT_NAME%_in_%workspaceFolderBaseName%\"",
+                "\"%PROJECT_ROOT%\"",
+                "%PROJECT_NAME%",
+                "%BUILD_CONFIG_DEBUG_NAME%",
+                ";exit",
+                "$LASTEXITCODE"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                {
+                    "base": "$msCompile",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ]
+                },
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Rebuild with updating makefile",
+            "type": "shell",
+            "command": ".vscode\\.scripts\\build.ps1",
+            "args": [
+                "build.bat",
+                "headlessbuild",
+                "-cleanBuild",
+                "\"%E2STUDIO_WORKSPACE_FOLDER%\\.headlessbuild\\%PROJECT_NAME%_in_%workspaceFolderBaseName%\"",
+                "\"%PROJECT_ROOT%\"",
+                "%PROJECT_NAME%",
+                "%BUILD_CONFIG_DEBUG_NAME%",
+                ";exit",
+                "$LASTEXITCODE"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                {
+                    "base": "$msCompile",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ]
+                },
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Launch e2 studio",
+            "type": "process",
+            "command": ".vscode\\.scripts\\exec.bat",
+            "args": [
+                "cd /d \"%E2STUDIO_WORKSPACE_FOLDER%\"",
+                "start \"\" \"%ECLIPSE_HOME%\\e2studio.exe\" -data ."
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Open Renesas Keyword Search Page",
+            "type": "process",
+            "command": "cmd.exe",
+            "args": [
+                "/c start https://www.renesas.com/search"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Open CC-RL Help",
+            "type": "process",
+            "command": ".vscode\\.scripts\\exec.bat",
+            "args": [
+                "if exist \"%TCINSTALL%\\Help\\Compiler-CCRL.chm\" start hh.exe \"%TCINSTALL%\\Help\\Compiler-CCRL.chm\""
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
