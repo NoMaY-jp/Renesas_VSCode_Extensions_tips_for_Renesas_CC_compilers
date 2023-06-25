@@ -1,0 +1,6 @@
+{
+    "board": "renesas:rl78g23_fpb_p64:g23-fpb-64p",
+    "port": "COM9",
+    "sketch": "Blink.ino",
+    "output": "../build"
+}

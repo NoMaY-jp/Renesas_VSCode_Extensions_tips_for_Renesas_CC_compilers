@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "HardwareDebug",
+            "type": "renesas",
+            "request": "launch",
+            "program": "${workspaceFolder}/../build/Blink.ino.elf",
+            "gdb": "C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_393711444/DebugComp/RL78/rl78-elf-gdb",
+            "target": {
+                "deviceFamily": "RL78",
+                "device": "R7F100GLG",
+                "debuggerType": "COMPORT",
+                "server": "C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_393711444/DebugComp/RL78/e2-server-gdb",
+                "serverParameters": ["-uConnectionTimeout=", "30", "-umFreq=", "0", "-usFreq=", "0", "-umClock=", "1", "-uComPort=", "COM9", "-uResetControl=", "0", "-uComBaudRate=", "0", "-uSelfCodeSet=", "0", "-usecurityID=", "00000000000000000000", "-usecurityIdSize", "10", "-upermitFlash=", "1", "-uuseWideVoltageMode=", "1", "-ueraseRom=", "1", "-uresetOnReload=", "1", "-ustopTimerEmu=", "0", "-ustopSerialEmu=", "0", "-umaskInternalResetSignal=", "0", "-n", "0", "-uverifyOnWritingMemory=", "1", "-uAllowRRMDMM=", "0", "-uRelayBreak=", "0"]
+            }
+        },
+        {
+            "name": "RenesasSimDebug",
+            "type": "renesas",
+            "request": "launch",
+            "program": "${workspaceFolder}/../build/Blink.ino.elf",
+            "gdb": "C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_393711444/DebugComp/RL78/rl78-elf-gdb",
+            "target": {
+                "deviceFamily": "RL78",
+                "device": "R7F100GLG",
+                "debuggerType": "SIMULATOR",
+                "server": "C:/Renesas/e2studio64/SupportFolders/.eclipse/com.renesas.platform_393711444/DebugComp/RL78/e2-server-gdb",
+                "serverParameters": ["-uConnectionTimeout=", "30", "-umFreq=", "20.00", "-usFreq=", "32.768", "-uresetOnReload=", "1", "-udisplaySimGUI=", "1", "-uSimulatorSetting=", "${workspaceFolder}/.vscode/server.simpj", "-uRelayBreak=", "0"]
+            }
+        }
+    ]
+
+    // Refer to Help page in below to know information about Setup, Build and Debug features of 
+    // Renesas Build and Debug Support Extension for Visual Studio Code.
+    // http://tool-support.renesas.com/e2studio/vscode/docs/debug/index.html
+
+    // Note: Refer to Renesas FAQ page in below about the DebugComp folder location of e2 studio.
+    // https://en-support.renesas.com/knowledgeBase/19891761
+    // https://ja-support.renesas.com/knowledgeBase/19851044
+}

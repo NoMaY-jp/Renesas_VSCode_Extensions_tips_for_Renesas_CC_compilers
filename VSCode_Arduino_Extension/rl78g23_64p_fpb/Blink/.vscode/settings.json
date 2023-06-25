@@ -1,0 +1,10 @@
+{
+    // https://github.com/clangd/vscode-clangd
+    // https://clangd.llvm.org/installation.html#editor-plugins
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/../build"
+    ],
+
+    // https://github.com/microsoft/vscode-arduino
+    "arduino.disableIntelliSenseAutoGen" : true
+}

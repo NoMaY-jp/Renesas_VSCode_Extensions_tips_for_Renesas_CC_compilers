@@ -1,0 +1,10 @@
+# https://clangd.llvm.org/config
+# https://clang.llvm.org/docs/UsersManual.html
+
+CompileFlags:
+  Add:
+    - --include=Arduino.h
+    - -D__attribute__(...)=
+    - -m32
+  Remove:
+    - --target=rl78
